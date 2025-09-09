@@ -16,7 +16,7 @@ import org.koin.dsl.module
 val networkModule = module {
 
     single {
-        val base = getKoin().getProperty("BASE_URL") ?: "http://10.252.112.77:5039/"
+        val base = getKoin().getProperty("BASE_URL") ?: "http://10.252.112.93:8282/"
         NetworkConfig(
             baseUrl        = base,
             connectTimeout = 15_000,

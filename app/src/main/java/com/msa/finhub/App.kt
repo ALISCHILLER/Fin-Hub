@@ -10,7 +10,7 @@ class App : Application() {
         super.onCreate()
         startKoin {
             androidContext(this@App)
-            properties(mapOf("BASE_URL" to "http://10.252.112.77:5039/"))
+            properties(mapOf("BASE_URL" to "http://10.252.112.93:8282/"))
             modules(AppModules.all)
         }
     }
