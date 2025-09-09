@@ -20,5 +20,5 @@ val loginModule = module {
     factory { LoginUseCase(get()) }
 
     // Presentation
-    viewModel { LoginViewModel(get(), get()) }
+    viewModel { LoginViewModel(get(), get(),get()) }
 }

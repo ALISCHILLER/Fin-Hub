@@ -14,6 +14,7 @@ import com.msa.finhub.feature.auth.login.presentation.LoginScreen
 import com.msa.finhub.feature.auth.login.presentation.LoginUiEvent
 import com.msa.finhub.feature.auth.login.presentation.LoginUiState
 import com.msa.finhub.feature.auth.login.presentation.LoginViewModel
+import com.msa.finhub.nav.AppNav
 import com.msa.finhub.ui.theme.FinHubTheme
 
 class MainActivity : ComponentActivity() {
@@ -22,29 +23,31 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             FinHubTheme {
-                val vm: LoginViewModel = org.koin.androidx.compose.koinViewModel()
-                val state by vm.state.collectAsState() // بهتر: collectAsStateWithLifecycle()
+//                val vm: LoginViewModel = org.koin.androidx.compose.koinViewModel()
+//                val state by vm.state.collectAsState() // بهتر: collectAsStateWithLifecycle()
+//
+//                var code by rememberSaveable { mutableStateOf(state.personelCode) }
+//                var pass by rememberSaveable { mutableStateOf(state.password) }
+//                var remember by rememberSaveable { mutableStateOf(state.rememberMe) }
+//
+//                LoginScreen(
+//                    state = state,
+//                    code = code,
+//                    password = pass,
+//                    rememberMe = remember,
+//                    onCodeChange = { code = it },
+//                    onPasswordChange = { pass = it },
+//                    onRememberChange = { remember = it },
+//                    onSubmit = {
+//                        vm.onEvent(LoginUiEvent.PersonelChanged(code))
+//                        vm.onEvent(LoginUiEvent.PasswordChanged(pass))
+//                        vm.onEvent(LoginUiEvent.RememberChanged(remember))
+//                        vm.onEvent(LoginUiEvent.Submit)
+//                    },
+//                    onDismissError = { vm.onEvent(LoginUiEvent.DismissError) }
+//                )
 
-                var code by rememberSaveable { mutableStateOf(state.personelCode) }
-                var pass by rememberSaveable { mutableStateOf(state.password) }
-                var remember by rememberSaveable { mutableStateOf(state.rememberMe) }
-
-                LoginScreen(
-                    state = state,
-                    code = code,
-                    password = pass,
-                    rememberMe = remember,
-                    onCodeChange = { code = it },
-                    onPasswordChange = { pass = it },
-                    onRememberChange = { remember = it },
-                    onSubmit = {
-                        vm.onEvent(LoginUiEvent.PersonelChanged(code))
-                        vm.onEvent(LoginUiEvent.PasswordChanged(pass))
-                        vm.onEvent(LoginUiEvent.RememberChanged(remember))
-                        vm.onEvent(LoginUiEvent.Submit)
-                    },
-                    onDismissError = { vm.onEvent(LoginUiEvent.DismissError) }
-                )
+                AppNav()
 
             }
         }

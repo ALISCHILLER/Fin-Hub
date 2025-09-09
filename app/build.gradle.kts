@@ -115,7 +115,7 @@ dependencies {
     implementation(dependency.datastore)
     implementation(dependency.securitycrypto)
     implementation("androidx.compose.material:material-icons-extended")
-
+    implementation("androidx.biometric:biometric:1.4.0-alpha02")
 
 }
 

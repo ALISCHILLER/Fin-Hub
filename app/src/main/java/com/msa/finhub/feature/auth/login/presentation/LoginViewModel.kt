@@ -2,19 +2,16 @@ package com.msa.finhub.feature.auth.login.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.msa.finhub.core.datastore.CredentialsStore
 import com.msa.finhub.feature.auth.login.domain.usecase.LoginUseCase
 import com.msa.finhub.feature.auth.login.domain.usecase.ValidateCredentials
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
     private val login: LoginUseCase,
-    private val validate: ValidateCredentials
+    private val validate: ValidateCredentials,
+    private val credentialsStore: CredentialsStore
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(LoginUiState())
@@ -23,10 +20,23 @@ class LoginViewModel(
     private val _effect = MutableSharedFlow<LoginUiEffect>()
     val effect = _effect.asSharedFlow()
 
+    init {
+        // Prefill از استور (اگر قبلاً Remember شده)
+        credentialsStore.get()?.let { c ->
+            _state.update {
+                it.copy(
+                    personelCode = c.username,
+                    password = c.password,
+                    rememberMe = true
+                )
+            }
+        }
+    }
+
     fun onEvent(e: LoginUiEvent) {
         when (e) {
             is LoginUiEvent.PersonelChanged -> _state.update {
-                it.copy(personelCode = e.value, error = null) // ✅ هر تایپ حفظ می‌شود
+                it.copy(personelCode = e.value.trim(), error = null)
             }
             is LoginUiEvent.PasswordChanged -> _state.update {
                 it.copy(password = e.value, error = null)
@@ -52,6 +62,12 @@ class LoginViewModel(
             val res = login(s.personelCode, s.password)
             res.fold(
                 onSuccess = {
+                    // ذخیره یا پاک‌سازی مطابق RememberMe
+                    if (state.value.rememberMe) {
+                        credentialsStore.save(state.value.personelCode, state.value.password)
+                    } else {
+                        credentialsStore.clear()
+                    }
                     _state.update { it.copy(isLoading = false, error = null) }
                     _effect.emit(LoginUiEffect.NavigateHome)
                 },
