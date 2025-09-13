@@ -1,4 +1,4 @@
-package com.msa.finhub.feature.inquiry
+package com.msa.finhub.feature.inquiry.presentation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.*
@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
-@OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InquiryScreen(
     spec: EndpointSpec,

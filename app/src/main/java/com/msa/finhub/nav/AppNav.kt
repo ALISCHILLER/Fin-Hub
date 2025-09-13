@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -56,9 +57,8 @@ import androidx.navigation.compose.rememberNavController
 import com.msa.finhub.feature.auth.login.presentation.LoginRoute
 import com.msa.finhub.feature.home.HomeScreen
 import com.msa.finhub.feature.settings.presentation.SettingsRoute
-import com.msa.finhub.feature.settings.presentation.SettingsScreen
-import com.msa.finhub.feature.inquiry.InquiryScreen
-import com.msa.finhub.feature.inquiry.InquirySpecs
+import com.msa.finhub.feature.inquiry.presentation.InquiryScreen
+import com.msa.finhub.feature.inquiry.presentation.InquirySpecs
 
 @Composable
 fun AppNav() {
@@ -77,7 +77,8 @@ fun AppNav() {
     val showBottomBar = currentRoute in bottomRoutes
 
     Scaffold(
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
+      //  contentWindowInsets = WindowInsets(0, 10, 0, 0),
+        contentWindowInsets = WindowInsets.safeDrawing,
         bottomBar = {
             AnimatedVisibility(visible = showBottomBar) {
                 FinBottomBar(

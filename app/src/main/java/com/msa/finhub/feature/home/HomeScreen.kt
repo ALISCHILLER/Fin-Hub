@@ -19,7 +19,7 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.msa.finhub.feature.inquiry.InquirySpecs
+import com.msa.finhub.feature.inquiry.presentation.InquirySpecs
 
 data class HomeItem(
     val title: String,

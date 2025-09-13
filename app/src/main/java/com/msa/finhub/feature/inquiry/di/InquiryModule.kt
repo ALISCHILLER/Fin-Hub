@@ -1,4 +1,4 @@
-package com.msa.finhub.feature.auth.login.di
+package com.msa.finhub.feature.inquiry.di
 
 import com.msa.finhub.feature.auth.login.data.remote.LoginApi
 import com.msa.finhub.feature.auth.login.data.remote.LoginApiImpl
@@ -10,6 +10,15 @@ import com.msa.finhub.feature.auth.login.presentation.LoginViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
-val loginModule = module {
+val InquiryModule = module {
+    // Data
+    single<LoginApi> { LoginApiImpl(get()) }                // HttpClient از شبکه
+    single<AuthRepository> { AuthRepositoryImpl(get(), get()) } // + TokenStore
 
+    // Domain
+    factory { ValidateCredentials() }
+    factory { LoginUseCase(get()) }
+
+    // Presentation
+    viewModel { LoginViewModel(get(), get(),get()) }
 }

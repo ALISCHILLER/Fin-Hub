@@ -1,4 +1,4 @@
-package com.msa.finhub.feature.inquiry
+package com.msa.finhub.feature.inquiry.presentation
 
 enum class FieldType { Text, Bool }
 
