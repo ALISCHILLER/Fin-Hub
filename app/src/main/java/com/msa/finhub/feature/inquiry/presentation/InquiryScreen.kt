@@ -20,13 +20,16 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
+import org.koin.androidx.compose.koinViewModel
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InquiryScreen(
     spec: EndpointSpec,
-    onBack: () -> Unit = {}
-){
-    val scope = rememberCoroutineScope()
+    onBack: () -> Unit = {},
+    viewModel: InquiryViewModel = koinViewModel()
+) {
+
 
     // نگهداری مقادیر فیلدها
     val textValues = remember { mutableStateMapOf<String, String>() }
@@ -41,9 +44,7 @@ fun InquiryScreen(
         }
     }
 
-    var resultText by remember { mutableStateOf<String?>(null) }
-    var errorText by remember { mutableStateOf<String?>(null) }
-    var loading by remember { mutableStateOf(false) }
+    val state by viewModel.state.collectAsState()
 
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
         Scaffold(
@@ -76,6 +77,7 @@ fun InquiryScreen(
                                 modifier = Modifier.fillMaxWidth()
                             )
                         }
+
                         FieldType.Bool -> {
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
@@ -94,33 +96,30 @@ fun InquiryScreen(
 
                 Button(
                     onClick = {
-                        scope.launch {
-                            loading = true
-                            resultText = null
-                            errorText = null
-                            val body: JsonObject = buildJsonObject {
-                                textValues.forEach { (k, v) -> put(k, JsonPrimitive(v)) }
-                                boolValues.forEach { (k, v) -> put(k, JsonPrimitive(v)) }
-                            }
-                            when (val res = NetworkHandler.post<JsonObject, JsonObject>(spec.path, body)) {
-                                is NetworkResult.Success -> resultText = res.data?.toString()
-                                is NetworkResult.Error -> errorText = res.error.message
-                                else -> {}
-                            }
-                            loading = false
-                        }
+                        viewModel.submit(spec, textValues, boolValues)
                     },
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text("ارسال استعلام")
                 }
 
-                resultText?.let { Text(it, style = MaterialTheme.typography.bodySmall) }
-                errorText?.let { Text(it, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall) }
+                state.result?.let {
+                    Text(
+                        it.toString(),
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
+                state.error?.let {
+                    Text(
+                        it,
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
             }
         }
 
-    LoadingOverlay(show = loading)
-}
+        LoadingOverlay(show = state.loading)
+    }
 
 }

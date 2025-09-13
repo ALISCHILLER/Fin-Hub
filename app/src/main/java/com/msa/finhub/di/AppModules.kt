@@ -2,6 +2,7 @@ package com.msa.finhub.di
 
 
 import com.msa.finhub.feature.auth.login.di.loginModule
+import com.msa.finhub.feature.inquiry.di.inquiryModule
 import com.msa.finhub.feature.settings.di.settingsModule
 
 object AppModules {
@@ -9,7 +10,7 @@ object AppModules {
         networkModule,
         datastoreModule,
         loginModule,
-        settingsModule
-
+        settingsModule,
+        inquiryModule
     )
 }
