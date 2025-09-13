@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-
+import timber.log.Timber
 open class BaseRepository(
     protected val networkHandler: NetworkHandler = NetworkHandler
 ) {
@@ -29,6 +29,7 @@ open class BaseRepository(
             emit(NetworkResult.Loading)
             emit(block())
         }.catch { e ->
+            Timber.e(e, "Error during network flow call")
             // دسترسی به context از طریق handler() که @PublishedApi internal است
             emit(NetworkResult.Error.fromException(e, handler().appContext))
         }.flowOn(Dispatchers.IO)

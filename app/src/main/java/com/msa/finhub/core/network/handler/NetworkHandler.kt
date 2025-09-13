@@ -105,30 +105,52 @@ object NetworkHandler {
 
     // ---------- HTTP verbs (typed over ApiResponse<T>) ----------
 
-    suspend inline fun <reified T> get(url: String): NetworkResult<T> =
-        safeApiCall { client.get(url).body<ApiResponse<T>>() }
+    suspend inline fun <reified T> get(url: String): NetworkResult<T> {
+        Timber.d("GET request to $url")
+        val result = safeApiCall { client.get(url).body<ApiResponse<T>>() }
+        Timber.d("GET result from $url: $result")
+        return result
+    }
 
-    suspend inline fun <reified Req, reified Res> post(url: String, body: Req): NetworkResult<Res> =
-        safeApiCall { client.post(url) { setBody(body) }.body<ApiResponse<Res>>() }
 
-    suspend inline fun <reified Req, reified Res> put(url: String, body: Req): NetworkResult<Res> =
-        safeApiCall { client.put(url) { setBody(body) }.body<ApiResponse<Res>>() }
-
-    suspend inline fun <reified Req, reified Res> patch(url: String, body: Req): NetworkResult<Res> =
-        safeApiCall { client.patch(url) { setBody(body) }.body<ApiResponse<Res>>() }
-
-    suspend inline fun <reified T> delete(url: String): NetworkResult<T> =
-        safeApiCall { client.delete(url).body<ApiResponse<T>>() }
-
+    suspend inline fun <reified Req, reified Res> post(url: String, body: Req): NetworkResult<Res> {
+        Timber.d("POST request to $url with body: $body")
+        val result = safeApiCall { client.post(url) { setBody(body) }.body<ApiResponse<Res>>() }
+        Timber.d("POST result from $url: $result")
+        return result
+    }
+    suspend inline fun <reified Req, reified Res> put(url: String, body: Req): NetworkResult<Res> {
+        Timber.d("PUT request to $url with body: $body")
+        val result = safeApiCall { client.put(url) { setBody(body) }.body<ApiResponse<Res>>() }
+        Timber.d("PUT result from $url: $result")
+        return result
+    }
+    suspend inline fun <reified Req, reified Res> patch(url: String, body: Req): NetworkResult<Res> {
+        Timber.d("PATCH request to $url with body: $body")
+        val result = safeApiCall { client.patch(url) { setBody(body) }.body<ApiResponse<Res>>() }
+        Timber.d("PATCH result from $url: $result")
+        return result
+    }
+    suspend inline fun <reified T> delete(url: String): NetworkResult<T> {
+        Timber.d("DELETE request to $url")
+        val result = safeApiCall { client.delete(url).body<ApiResponse<T>>() }
+        Timber.d("DELETE result from $url: $result")
+        return result
+    }
     // HEAD → Unit (no body parsing)
-    suspend fun head(url: String): NetworkResult<Unit> = safeApiCall {
-        val resp = client.head(url)
-        ApiResponse(
-            code = resp.status.value,
-            status = resp.status.description,
-            data = Unit,
-            message = resp.status.description,
-            hasError = !resp.status.isSuccess()
-        )
+    suspend fun head(url: String): NetworkResult<Unit> {
+        Timber.d("HEAD request to $url")
+        val result = safeApiCall {
+            val resp = client.head(url)
+            ApiResponse(
+                code = resp.status.value,
+                status = resp.status.description,
+                data = Unit,
+                message = resp.status.description,
+                hasError = !resp.status.isSuccess()
+            )
+        }
+        Timber.d("HEAD result from $url: $result")
+        return result
     }
 }
