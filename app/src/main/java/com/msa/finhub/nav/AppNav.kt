@@ -54,6 +54,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.msa.finhub.feature.auth.login.presentation.LoginRoute
+import com.msa.finhub.feature.home.HomeScreen
 import com.msa.finhub.feature.settings.presentation.SettingsRoute
 import com.msa.finhub.feature.settings.presentation.SettingsScreen
 
@@ -263,12 +264,6 @@ private fun backStackMatches(current: String, target: String): Boolean {
     return current == target || current.startsWith("$target/")
 }
 
-/** صفحات نمونه **/
-@Composable
-fun HomeScreen() {
-    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text("صفحهٔ خانه", style = MaterialTheme.typography.titleLarge)
-    }
-}
+
 
 
