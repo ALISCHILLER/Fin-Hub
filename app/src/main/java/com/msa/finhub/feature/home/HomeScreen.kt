@@ -1,5 +1,6 @@
 package com.msa.finhub.feature.home
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,7 +13,10 @@ import androidx.compose.material.icons.outlined.PersonSearch
 import androidx.compose.material.icons.outlined.VerifiedUser
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.msa.finhub.feature.inquiry.InquirySpecs
@@ -37,5 +41,22 @@ fun HomeScreen(navController: NavController) {
         HomeItem("تأیید چک توسط گیرنده", InquirySpecs.SayadAcceptChequeReciever.route) { Icon(Icons.Outlined.Check, null) },
     )
 
-
+    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(vertical = 12.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            items(items) { item ->
+                ListItem(
+                    headlineContent = { Text(item.title) },
+                    leadingContent = { item.icon() },
+                    modifier = Modifier
+                        .clickable { navController.navigate(item.route) }
+                        .padding(horizontal = 12.dp)
+                )
+                Divider()
+            }
+        }
+    }
 }

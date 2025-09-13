@@ -57,7 +57,8 @@ import com.msa.finhub.feature.auth.login.presentation.LoginRoute
 import com.msa.finhub.feature.home.HomeScreen
 import com.msa.finhub.feature.settings.presentation.SettingsRoute
 import com.msa.finhub.feature.settings.presentation.SettingsScreen
-
+import com.msa.finhub.feature.inquiry.InquiryScreen
+import com.msa.finhub.feature.inquiry.InquirySpecs
 
 @Composable
 fun AppNav() {
@@ -108,7 +109,7 @@ fun AppNav() {
                     }
                 )
             }
-            composable(Routes.Home)     { HomeScreen() }
+            composable(Routes.Home)     { HomeScreen(navController) }
 
             composable(Routes.Settings) {
                 SettingsRoute(
@@ -119,6 +120,13 @@ fun AppNav() {
                         }
                     }
                 )
+            }
+
+            // ثبت همهٔ مسیرهای استعلام
+            InquirySpecs.all.forEach { spec ->
+                composable(spec.route) {
+                    InquiryScreen(spec = spec, onBack = { navController.popBackStack() })
+                }
             }
         }
     }
