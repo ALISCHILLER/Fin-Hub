@@ -23,9 +23,7 @@ fun LoginRoute(
     vm: LoginViewModel = koinViewModel(),
     onLoggedIn: () -> Unit
 ) {
-    // چرخه‌حیات‌محور: از گم‌شدن state در پس‌زمینه جلوگیری می‌کند
     val state = vm.state.collectAsStateWithLifecycle().value
-
     val bioStore: BiometricCredentialsStore = koinInject()
 
     val ctx = LocalContext.current
@@ -45,27 +43,40 @@ fun LoginRoute(
         }
     }
 
+    // اگر بیومتریک در دسترس بود، ورودی‌های UI خالی باشند
+    val uiCode = if (biometricAvailable) "" else state.personelCode
+    val uiPassword = if (biometricAvailable) "" else state.password
+
     LoginScreen(
         state = state,
-        code = state.personelCode,                // ← فقط از ویومدل بخوان
-        password = state.password,
+
+        // ← وقتی بیومتریک فعال است، ورودی‌ها خالی به UI پاس بده
+        code = uiCode,
+        password = uiPassword,
+
         rememberMe = state.rememberMe,
-        onCodeChange = { vm.onEvent(LoginUiEvent.PersonelChanged(it)) },
-        onPasswordChange = { vm.onEvent(LoginUiEvent.PasswordChanged(it)) },
+
+        // ← وقتی بیومتریک فعال است، تغییرات را به ویومدل نفرست (no-op)
+        onCodeChange = { if (!biometricAvailable) vm.onEvent(LoginUiEvent.PersonelChanged(it)) },
+        onPasswordChange = { if (!biometricAvailable) vm.onEvent(LoginUiEvent.PasswordChanged(it)) },
         onRememberChange = { vm.onEvent(LoginUiEvent.RememberChanged(it)) },
+
         onSubmit = { vm.onEvent(LoginUiEvent.Submit) },
         onDismissError = { vm.onEvent(LoginUiEvent.DismissError) },
+
         biometricAvailable = biometricAvailable,
         onBiometricClick = {
             scope.launch {
                 val creds = bioStore.decrypt(activity)
                 if (creds != null) {
+                    // این‌ها state ویومدل را ست می‌کنند، ولی UI همچنان خالی می‌ماند چون بالا شرطی‌اش کردیم
                     vm.onEvent(LoginUiEvent.PersonelChanged(creds.username))
                     vm.onEvent(LoginUiEvent.PasswordChanged(creds.password))
+                    vm.onEvent(LoginUiEvent.RememberChanged(true))
+                    vm.onEvent(LoginUiEvent.Submit)
                 }
             }
         }
-
-
     )
 }
+

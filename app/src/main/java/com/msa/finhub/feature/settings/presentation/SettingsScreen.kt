@@ -6,9 +6,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.msa.finhub.ui.components.ErrorDialog
 import com.msa.finhub.ui.components.LoadingOverlay
@@ -21,6 +24,7 @@ fun SettingsScreen(
     val cs = MaterialTheme.colorScheme
     val ty = MaterialTheme.typography
 
+    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
     Box(Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
@@ -137,7 +141,7 @@ fun SettingsScreen(
                     ) { Text("خروج از حساب") }
 
                     Text(
-                        "با خروج از حساب، توکن و همچنین اطلاعات ورود ذخیره‌شده (یوزرنیم/رمز) پاک می‌شود.",
+                        "با خروج از حساب، فقط توکن پاک می‌شود؛ اگر «حفظ ورود» فعال باشد، اطلاعات ورود و بیومتریک باقی می‌مانند.",
                         style = ty.labelSmall, color = cs.onSurfaceVariant
                     )
                 }
@@ -188,5 +192,6 @@ fun SettingsScreen(
             text = if (state.isLoggingOut) "در حال خروج…" else "در حال تنظیم بیومتریک…",
             modifier = Modifier.fillMaxSize()
         )
+    }
     }
 }

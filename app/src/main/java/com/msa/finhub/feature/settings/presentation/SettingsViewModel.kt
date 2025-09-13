@@ -116,8 +116,8 @@ class SettingsViewModel(
         _state.update { it.copy(isLoggingOut = true, showLogoutConfirm = false) }
         try {
             tokenStore.clear()
-            credentialsStore.clear()
-            bioStore.clear()
+//            credentialsStore.clear()
+//            bioStore.clear()
             _state.update { it.copy(isLoggingOut = false) }
             _effect.emit(SettingsEffect.LoggedOut)
         } catch (t: Throwable) {
