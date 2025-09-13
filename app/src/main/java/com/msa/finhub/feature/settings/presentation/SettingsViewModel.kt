@@ -19,8 +19,8 @@ class SettingsViewModel(
     private val _state = MutableStateFlow(SettingsUiState())
     val state: StateFlow<SettingsUiState> = _state.asStateFlow()
 
-    private val _effect = Channel<SettingsEffect>(Channel.BUFFERED)
-    val effect: Flow<SettingsEffect> = _effect.receiveAsFlow()
+    private val _effect = MutableSharedFlow<SettingsEffect>()
+    val effect: SharedFlow<SettingsEffect> = _effect.asSharedFlow()
 
     init {
         val creds: Credentials? = credentialsStore.get()
@@ -70,6 +70,10 @@ class SettingsViewModel(
 
     private fun onEnableBiometric() {
         val s = state.value
+        if (!s.biometricAvailable) {
+            _state.update { it.copy(error = "دستگاه از بیومتریک پشتیبانی نمی‌کند.") }
+            return
+        }
         if (!s.hasSavedCredentials) {
             _state.update { it.copy(error = "برای بیومتریک، ابتدا «حفظ ورود» را روشن و وارد شوید.") }
             return
@@ -81,7 +85,7 @@ class SettingsViewModel(
         }
         _state.update { it.copy(isBiometricBusy = true) }
         viewModelScope.launch {
-            _effect.send(SettingsEffect.RequestEnableBiometric(creds.username, creds.password))
+            _effect.emit(SettingsEffect.RequestEnableBiometric(creds.username, creds.password))
         }
     }
 
@@ -115,13 +119,13 @@ class SettingsViewModel(
             credentialsStore.clear()
             bioStore.clear()
             _state.update { it.copy(isLoggingOut = false) }
-            _effect.send(SettingsEffect.LoggedOut)
+            _effect.emit(SettingsEffect.LoggedOut)
         } catch (t: Throwable) {
             _state.update { it.copy(isLoggingOut = false, error = t.message ?: "خطای خروج از حساب") }
         }
     }
 
     private fun toast(msg: String) = viewModelScope.launch {
-        _effect.send(SettingsEffect.Toast(msg))
+        _effect.emit(SettingsEffect.Toast(msg))
     }
 }

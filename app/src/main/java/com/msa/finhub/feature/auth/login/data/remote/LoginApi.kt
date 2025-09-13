@@ -26,19 +26,17 @@ class LoginApiImpl(
     private val client: HttpClient
 ) : LoginApi {
 
-    override suspend fun login(req: LoginReq): ServerEnvelope<String> =
+    private suspend fun postLogin(req: LoginReq): HttpResponse =
         client.post(LOGIN_PATH) {
             contentType(ContentType.Application.Json)
             accept(ContentType.Application.Json)
             setBody(req)
-        }.body()
+        }
+    override suspend fun login(req: LoginReq): ServerEnvelope<String> =
+        postLogin(req).body()
 
     override suspend fun loginRaw(req: LoginReq): Pair<Int, ServerEnvelope<String>> {
-        val response: HttpResponse = client.post(LOGIN_PATH) {
-            contentType(ContentType.Application.Json)
-            accept(ContentType.Application.Json)
-            setBody(req)
-        }
+        val response = postLogin(req)
         val status = response.status.value
         val envelope: ServerEnvelope<String> = response.body()
         return status to envelope

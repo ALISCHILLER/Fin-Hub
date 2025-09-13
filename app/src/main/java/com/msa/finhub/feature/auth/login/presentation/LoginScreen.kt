@@ -36,7 +36,11 @@ fun LoginScreen(
     onPasswordChange: (String) -> Unit,
     onRememberChange: (Boolean) -> Unit,
     onSubmit: () -> Unit,
-    onDismissError: () -> Unit
+    onDismissError: () -> Unit,
+    biometricAvailable: Boolean,
+    onBiometricClick: () -> Unit
+
+
 ) {
     val cs = MaterialTheme.colorScheme
     val typography = MaterialTheme.typography
@@ -232,6 +236,16 @@ fun LoginScreen(
 
                         Spacer(Modifier.height(12.dp))
 
+                        if (biometricAvailable) {
+                            TextButton(
+                                onClick = onBiometricClick,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text("ورود با بیومتریک")
+                            }
+
+                            Spacer(Modifier.height(12.dp))
+                        }
                         // --- متن قوانین ---
                         ProvideTextStyle(typography.labelSmall) {
                             Text(

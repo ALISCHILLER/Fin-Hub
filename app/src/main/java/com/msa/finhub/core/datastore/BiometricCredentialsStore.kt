@@ -67,6 +67,7 @@ class BiometricCredentialsStore(
         username: String?,
         password: String
     ): Boolean {
+        if (!canUseBiometric(activity)) return false
         // 1) کلید AES را از Keystore بگیر/بساز
         val key = getOrCreateAesKey(alias)
 
@@ -107,6 +108,7 @@ class BiometricCredentialsStore(
     suspend fun decrypt(
         activity: FragmentActivity
     ): Credentials? {
+        if (!canUseBiometric(activity)) return null
         val ctB64 = prefs.getString(KEY_CT, null) ?: return null
         val ivB64 = prefs.getString(KEY_IV, null) ?: return null
         val username = prefs.getString(KEY_USER, null).orEmpty()

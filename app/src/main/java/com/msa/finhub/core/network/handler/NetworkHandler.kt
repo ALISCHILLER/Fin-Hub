@@ -33,6 +33,11 @@ object NetworkHandler {
 
     @Volatile
     private var initialized = false
+    fun isInitialized(): Boolean = initialized
+
+    private fun ensureInitialized() {
+        check(initialized) { "NetworkHandler not initialized" }
+    }
 
     fun initialize(context: Context, monitor: NetworkStatusMonitor, httpClient: HttpClient) {
         if (initialized) return
@@ -42,10 +47,12 @@ object NetworkHandler {
         initialized = true
     }
 
-    fun hasNetworkConnection(): Boolean =
-        networkStatusMonitor.currentStatus() is NetworkStatusMonitor.NetworkStatus.Available
-
+    fun hasNetworkConnection(): Boolean {
+        ensureInitialized()
+        return networkStatusMonitor.currentStatus() is NetworkStatusMonitor.NetworkStatus.Available
+    }
     fun <T> handleApiResponse(response: ApiResponse<T>): NetworkResult<T> {
+        ensureInitialized()
         Timber.d("Handling API response: $response")
         return if (!response.hasError) {
             val data = response.data

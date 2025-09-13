@@ -26,7 +26,7 @@ fun SettingsRoute(
     val state = vm.state.collectAsStateWithLifecycle().value
 
     val context = LocalContext.current
-    val activity = context as FragmentActivity
+    val activity = remember(context) { context as FragmentActivity }
     val scope = rememberCoroutineScope()
 
     // تشخیص پشتیبانی بیومتریک

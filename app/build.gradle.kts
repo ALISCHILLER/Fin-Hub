@@ -115,7 +115,12 @@ dependencies {
     implementation(dependency.datastore)
     implementation(dependency.securitycrypto)
     implementation("androidx.compose.material:material-icons-extended")
-    implementation("androidx.biometric:biometric:1.4.0-alpha02")
+    // Biometric and Fragment support
+    implementation("androidx.biometric:biometric:1.1.0")
+    implementation("androidx.fragment:fragment-ktx:1.7.1")
+
+    // Lifecycle utilities for Compose
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.6")
 
 }
 
