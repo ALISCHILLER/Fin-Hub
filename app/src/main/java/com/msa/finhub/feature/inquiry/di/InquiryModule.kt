@@ -11,14 +11,5 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val InquiryModule = module {
-    // Data
-    single<LoginApi> { LoginApiImpl(get()) }                // HttpClient از شبکه
-    single<AuthRepository> { AuthRepositoryImpl(get(), get()) } // + TokenStore
 
-    // Domain
-    factory { ValidateCredentials() }
-    factory { LoginUseCase(get()) }
-
-    // Presentation
-    viewModel { LoginViewModel(get(), get(),get()) }
 }
