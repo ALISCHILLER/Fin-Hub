@@ -110,7 +110,7 @@ fun LoginScreen(
                             isError = state.error?.contains("کد پرسنلی") == true,
                             supportingText = state.error?.takeIf { it.contains("کد پرسنلی") },
                             keyboardOptions = KeyboardOptions(
-                                keyboardType = KeyboardType.Ascii,
+                                keyboardType = KeyboardType.Text,   // ⬅️ قبلاً Ascii بود
                                 imeAction = ImeAction.Next,
                                 autoCorrect = false
                             ),

@@ -11,7 +11,7 @@ import org.koin.dsl.module
 
 val inquiryModule = module {
     single<InquiryApi> { InquiryApiImpl() }
-    single<InquiryRepository> { InquiryRepositoryImpl(get()) }
+    single<InquiryRepository> { InquiryRepositoryImpl(get(), get()) }
     single { InquiryUseCase(get()) }
     viewModel { InquiryViewModel(get()) }
 }
