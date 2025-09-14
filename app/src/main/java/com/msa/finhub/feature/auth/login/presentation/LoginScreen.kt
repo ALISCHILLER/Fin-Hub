@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import com.msa.finhub.ui.components.ErrorDialog
 import com.msa.finhub.ui.components.LoadingDialog
 import com.msa.finhub.ui.components.FinOutlinedTextField
+import com.msa.finhub.ui.components.FinPasswordField
 @Composable
 fun LoginScreen(
     state: LoginUiState,
@@ -45,7 +46,7 @@ fun LoginScreen(
     val cs = MaterialTheme.colorScheme
     val typography = MaterialTheme.typography
     val scrollState = rememberScrollState()
-    var passwordVisible by remember { mutableStateOf(false) }
+   // var passwordVisible by remember { mutableStateOf(false) }
 
     // ✅ تمام صفحه را RTL می‌کنیم — دیگر نیازی به Modifier.layoutDirection نیست
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
@@ -119,39 +120,15 @@ fun LoginScreen(
                         Spacer(Modifier.height(16.dp))
 
                         // --- فیلد رمز عبور ---
-                        OutlinedTextField(
+                        FinPasswordField(
                             value = password,
                             onValueChange = onPasswordChange,
-                            label = { Text("رمز عبور") },
-                            placeholder = { Text("••••••••") },
-                            singleLine = true,
-                            leadingIcon = { Icon(Icons.Outlined.Lock, contentDescription = null) },
-                            trailingIcon = {
-                                IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                                    Icon(
-                                        imageVector = if (passwordVisible) Icons.Outlined.VisibilityOff else Icons.Outlined.Visibility,
-                                        contentDescription = if (passwordVisible) "مخفی کردن رمز" else "نمایش رمز"
-                                    )
-                                }
-                            },
-                            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                            keyboardOptions = KeyboardOptions(
-                                keyboardType = KeyboardType.Password,
-                                imeAction = ImeAction.Done,
-                                autoCorrect = false
-                            ),
-                            keyboardActions = KeyboardActions(onDone = { onSubmit() }),
+                            leading = { Icon(Icons.Outlined.Lock, contentDescription = null) },
+                            placeholder = "••••••••",
                             isError = state.error?.contains("رمز عبور") == true,
-                            supportingText = {
-                                state.error?.takeIf { it.contains("رمز عبور") }?.let { errorText ->
-                                    Text(
-                                        text = errorText,
-                                        color = cs.error,
-                                        style = typography.labelSmall
-                                    )
-                                }
-                            },
-                            colors = getTextFieldColors(cs),
+                            supportingText = state.error?.takeIf { it.contains("رمز عبور") },
+                            imeAction = ImeAction.Done,
+                            onImeAction = onSubmit,
                             modifier = Modifier.fillMaxWidth()
                         )
 
@@ -285,14 +262,14 @@ fun LoginScreen(
 }
 
 // --- تابع کمکی برای رنگ‌های TextField ---
-@Composable
-private fun getTextFieldColors(cs: ColorScheme) = OutlinedTextFieldDefaults.colors(
-    focusedBorderColor = cs.primary,
-    unfocusedBorderColor = cs.outline,
-    cursorColor = cs.primary,
-    focusedLabelColor = cs.primary,
-    errorBorderColor = cs.error,
-    errorCursorColor = cs.error,
-    errorLeadingIconColor = cs.error,
-    errorTrailingIconColor = cs.error
-)
+//@Composable
+//private fun getTextFieldColors(cs: ColorScheme) = OutlinedTextFieldDefaults.colors(
+//    focusedBorderColor = cs.primary,
+//    unfocusedBorderColor = cs.outline,
+//    cursorColor = cs.primary,
+//    focusedLabelColor = cs.primary,
+//    errorBorderColor = cs.error,
+//    errorCursorColor = cs.error,
+//    errorLeadingIconColor = cs.error,
+//    errorTrailingIconColor = cs.error
+//)
