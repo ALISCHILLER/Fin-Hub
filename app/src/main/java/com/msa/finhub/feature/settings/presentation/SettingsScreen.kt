@@ -148,7 +148,7 @@ fun SettingsScreen(
             }
 
             Spacer(Modifier.height(24.dp))
-            Text("© ${java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)} FinHub",
+            Text("© ${java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)} FinHub  تولید و توسعه توسط گروه نرم افزار گروه صنعتی زر",
                 style = ty.labelSmall, color = cs.onSurfaceVariant)
         }
 

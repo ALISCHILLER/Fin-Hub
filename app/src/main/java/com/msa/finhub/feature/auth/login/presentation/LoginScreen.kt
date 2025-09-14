@@ -263,7 +263,7 @@ fun LoginScreen(
 
                 // --- کپی‌رایت (چپ‌چین برای برند — با textAlign) ---
                 Text(
-                    text = "© ${java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)} FinHub",
+                    text = "© ${java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)} FinHub   تولید و توسعه توسط گروه نرم افزار گروه صنعتی زر",
                     style = typography.labelSmall,
                     color = cs.onSurfaceVariant.copy(alpha = 0.6f),
                     textAlign = TextAlign.Start // ← در RTL, Start = چپ
