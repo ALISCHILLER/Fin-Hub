@@ -67,7 +67,7 @@ object InquirySpecs {
     val PersonalIdentity = EndpointSpec(
         route = "personalIdentity",
         title = "احراز هویت حقیقی (فردی)",
-        path = "/PersonalIdentity",
+        path = "/api/v1/FinnoTech/PersonalIdentity",
         fields = listOf(
             FieldSpec("inquiry", "استعلام مجدد؟", FieldType.Bool, required = false),
             FieldSpec("NationalCode", "کد ملی فرد"),
