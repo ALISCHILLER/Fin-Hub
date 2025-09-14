@@ -13,14 +13,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import com.msa.finhub.core.network.error.NetworkResult
-import com.msa.finhub.core.network.handler.NetworkHandler
 import com.msa.finhub.ui.components.LoadingOverlay
-import kotlinx.coroutines.launch
-import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.JsonPrimitive
-import kotlinx.serialization.json.buildJsonObject
 import org.koin.androidx.compose.koinViewModel
+import androidx.compose.ui.res.stringResource
+import androidx.compose.runtime.saveable.rememberSaveable
+import com.msa.finhub.R
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -32,8 +30,8 @@ fun InquiryScreen(
 
 
     // نگهداری مقادیر فیلدها
-    val textValues = remember { mutableStateMapOf<String, String>() }
-    val boolValues = remember { mutableStateMapOf<String, Boolean>() }
+    val textValues = rememberSaveable(spec) { mutableStateMapOf<String, String>() }
+    val boolValues = rememberSaveable(spec) { mutableStateMapOf<String, Boolean>() }
     LaunchedEffect(spec) {
         textValues.clear(); boolValues.clear()
         spec.fields.forEach { field ->
@@ -44,7 +42,7 @@ fun InquiryScreen(
         }
     }
 
-    val state by viewModel.state.collectAsState()
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
         Scaffold(
@@ -100,7 +98,7 @@ fun InquiryScreen(
                     },
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("ارسال استعلام")
+                    Text(stringResource(R.string.inquiry_submit))
                 }
 
                 state.result?.let {

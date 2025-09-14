@@ -6,7 +6,6 @@ import com.msa.finhub.core.datastore.AuthTokenStore
 import com.msa.finhub.core.datastore.Credentials
 import com.msa.finhub.core.datastore.CredentialsStore
 import com.msa.finhub.core.datastore.BiometricCredentialsStore
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 

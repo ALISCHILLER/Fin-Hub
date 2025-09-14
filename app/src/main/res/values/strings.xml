@@ -40,6 +40,18 @@
     <string name="error_title_application">خطای برنامه</string>
     <string name="error_title_unknown">خطای ناشناخته</string>
 
+
+    <!-- Home screen -->
+    <string name="home_sayad_cheque_inquiry">استعلام چک صیاد</string>
+    <string name="home_sayad_check_color_status">رنگ چک (حقیقی)</string>
+    <string name="home_sayad_check_color_legal_status">رنگ چک (حقوقی)</string>
+    <string name="home_personal_identity">احراز هویت حقیقی</string>
+    <string name="home_national_code_sayad_id_identity">تطابق کدملی و شِبا/چک</string>
+    <string name="home_mobile_national_code">تطابق کدملی و موبایل</string>
+    <string name="home_guaranty_inquiry">استعلام ضمانت‌های فرد</string>
+    <string name="home_sayad_accept_cheque_receiver">تأیید چک توسط گیرنده</string>
+    <string name="inquiry_submit">ارسال استعلام</string>
+
     <!-- Settings screen -->
     <string name="settings_title">تنظیمات</string>
     <string name="settings_account_header">حساب کاربری</string>
@@ -62,6 +74,7 @@
     <string name="settings_footer">© %1$d FinHub  تولید و توسعه توسط گروه نرم افزار گروه صنعتی زر</string>
     <string name="dialog_logout_message">می‌خواهید خارج شوید؟</string>
     <string name="dialog_logout_confirm">بله، خروج</string>
+    <string name="dialog_confirm">بله</string>
     <string name="dialog_cancel">انصراف</string>
     <string name="dialog_clear_creds_title">حذف اطلاعات ورود</string>
     <string name="dialog_clear_creds_message">اطلاعات ورود ذخیره‌شده پاک شود؟</string>

@@ -156,8 +156,10 @@ fun SettingsScreen(
             }
 
             Spacer(Modifier.height(24.dp))
-            Text("© $currentYear FinHub  تولید و توسعه توسط گروه نرم افزار گروه صنعتی زر",
-                style = ty.labelSmall, color = cs.onSurfaceVariant)
+            Text(
+                stringResource(R.string.settings_footer, currentYear),
+                style = ty.labelSmall, color = cs.onSurfaceVariant
+            )
         }
 
         // دیالوگ‌ها

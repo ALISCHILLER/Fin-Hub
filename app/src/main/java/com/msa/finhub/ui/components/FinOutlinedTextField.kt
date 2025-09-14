@@ -14,7 +14,7 @@ import androidx.compose.ui.text.input.*
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
-
+import androidx.compose.runtime.saveable.rememberSaveable
 @Composable
 fun FinOutlinedTextField(
     value: String,
@@ -63,7 +63,7 @@ fun FinPasswordField(
     onImeAction: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
-    var visible by remember { mutableStateOf(false) }
+    var visible by rememberSaveable { mutableStateOf(false) }
     val cs = MaterialTheme.colorScheme
     OutlinedTextField(
         value = value,
