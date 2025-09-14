@@ -39,7 +39,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            buildConfigField("boolean", "ENABLE_NETWORK_LOGS", "false")
+//            buildConfigField("boolean", "ENABLE_NETWORK_LOGS", "false")
         }
     }
     compileOptions {
