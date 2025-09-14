@@ -19,6 +19,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.runtime.saveable.rememberSaveable
 import com.msa.finhub.R
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.snapshots.SnapshotStateMap
+
+private fun <T> stateMapSaver() = Saver<SnapshotStateMap<String, T>, Map<String, T>>(
+    save = { HashMap(it) },
+    restore = { saved -> mutableStateMapOf<String, T>().apply { putAll(saved) } }
+)
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -30,8 +38,12 @@ fun InquiryScreen(
 
 
     // نگهداری مقادیر فیلدها
-    val textValues = rememberSaveable(spec) { mutableStateMapOf<String, String>() }
-    val boolValues = rememberSaveable(spec) { mutableStateMapOf<String, Boolean>() }
+    val textValues = rememberSaveable(spec, saver = stateMapSaver<String>()) {
+        mutableStateMapOf<String, String>()
+    }
+    val boolValues = rememberSaveable(spec, saver = stateMapSaver<Boolean>()) {
+        mutableStateMapOf<String, Boolean>()
+    }
     LaunchedEffect(spec) {
         textValues.clear(); boolValues.clear()
         spec.fields.forEach { field ->
