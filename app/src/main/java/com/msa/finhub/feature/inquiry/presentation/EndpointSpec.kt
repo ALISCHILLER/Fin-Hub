@@ -44,7 +44,7 @@ object InquirySpecs {
             FieldSpec("inquiry", "استعلام مجدد؟", FieldType.Bool, required = false),
             FieldSpec("sayadId", "شناسه چک صیادی", required = false),
             FieldSpec("customerNationalId", "کد ملی مشتری"),
-            FieldSpec("sayadId", "شناسه چک صیادی", required = false),
+            FieldSpec("customerCode", "کد مشتری", required = false),
             FieldSpec("isOwnerByCustomer", "چک برای خود مشتری؟", FieldType.Bool, required = false)
         )
     )

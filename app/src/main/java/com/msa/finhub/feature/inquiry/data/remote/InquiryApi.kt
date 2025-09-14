@@ -22,7 +22,9 @@ class InquiryApiImpl : BaseRepository(), InquiryApi {
         path: String,
         params: Map<String, String>
     ): NetworkResult<JsonObject> {
-        val query = params.entries.joinToString("&") { (k, v) -> "${'$'}k=${'$'}v" }
+        val query = params.entries.joinToString("&") { (k, v) ->
+            "${'$'}k=${'$'}{v.encodeURLQueryComponent()}"
+        }
         val url = if (query.isNotEmpty()) "${'$'}path?${'$'}query" else path
         return get(url)
     }
