@@ -29,8 +29,8 @@ object InquirySpecs {
         fields = listOf(
             FieldSpec("inquiry", "استعلام مجدد؟", FieldType.Bool, required = false),
             FieldSpec("sayadId", "شناسه چک صیادی"),
-            FieldSpec("customerNationalCode", "کد ملی مشتری"),
-            FieldSpec("customerCode", "کد مشتری"),
+            FieldSpec("customerNationalCode", "کد ملی مشتری", required = false),
+            FieldSpec("customerCode", "کد مشتری", required = false),
             FieldSpec("isOwnerByCustomer", "چک برای خود مشتری؟", FieldType.Bool, required = false)
         )
     )
@@ -42,9 +42,9 @@ object InquirySpecs {
         path = "/api/v1/FinnoTech/SayadCheckColorStatus",
         fields = listOf(
             FieldSpec("inquiry", "استعلام مجدد؟", FieldType.Bool, required = false),
-            FieldSpec("sayadId", "شناسه چک صیادی"),
+            FieldSpec("sayadId", "شناسه چک صیادی", required = false),
             FieldSpec("customerNationalId", "کد ملی مشتری"),
-            FieldSpec("customerCode", "کد مشتری"),
+            FieldSpec("sayadId", "شناسه چک صیادی", required = false),
             FieldSpec("isOwnerByCustomer", "چک برای خود مشتری؟", FieldType.Bool, required = false)
         )
     )
@@ -56,9 +56,9 @@ object InquirySpecs {
         path = "/api/v1/FinnoTech/SayadCheckColorLegalStatus",
         fields = listOf(
             FieldSpec("inquiry", "استعلام مجدد؟", FieldType.Bool, required = false),
-            FieldSpec("sayadId", "شناسه چک صیادی"),
+            FieldSpec("sayadId", "شناسه چک صیادی", required = false),
             FieldSpec("customerNationalId", "کد ملی مشتری"),
-            FieldSpec("customerCode", "کد مشتری"),
+            FieldSpec("customerCode", "کد مشتری", required = false),
             FieldSpec("isOwnerByCustomer", "چک برای خود مشتری؟", FieldType.Bool, required = false)
         )
     )
@@ -83,8 +83,8 @@ object InquirySpecs {
         fields = listOf(
             FieldSpec("inquiry", "استعلام مجدد؟", FieldType.Bool, required = false),
             FieldSpec("iban", "شماره شبا", hint = "IR..."),
-            FieldSpec("customerCode", "کد مشتری"),
-            FieldSpec("sayadId", "شناسه چک"),
+            FieldSpec("customerCode", "کد مشتری", required = false),
+            FieldSpec("sayadId", "شناسه چک", required = false),
             FieldSpec("isOwnerByCustomer", "چک برای خود مشتری؟", FieldType.Bool, required = false),
             FieldSpec("customerNationalId", "کد ملی مشتری")
         )
@@ -121,8 +121,8 @@ object InquirySpecs {
         fields = listOf(
             FieldSpec("inquiry", "استعلام مجدد؟", FieldType.Bool, required = false),
             FieldSpec("sayadId", "شناسه چک صیادی"),
-            FieldSpec("customerNationalCode", "کد ملی مشتری"),
-            FieldSpec("customerCode", "کد مشتری"),
+            FieldSpec("customerNationalCode", "کد ملی مشتری", required = false),
+            FieldSpec("customerCode", "کد مشتری", required = false),
             FieldSpec("isOwnerByCustomer", "چک برای خود مشتری؟", FieldType.Bool, required = false)
         )
     )
