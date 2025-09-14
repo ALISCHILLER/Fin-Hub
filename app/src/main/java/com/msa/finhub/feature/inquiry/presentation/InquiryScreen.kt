@@ -22,6 +22,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import timber.log.Timber
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.text.selection.SelectionContainer
 
 private fun <T> stateMapSaver() = Saver<SnapshotStateMap<String, T>, Map<String, T>>(
     save = { HashMap(it) },
@@ -116,18 +122,35 @@ fun InquiryScreen(
                     Text(stringResource(R.string.inquiry_submit))
                 }
 
-                state.result?.let {
-                    Text(
-                        it.toString(),
-                        style = MaterialTheme.typography.bodySmall
-                    )
+                state.result?.let { json ->
+                    val pretty = remember(json) {
+                        Json { prettyPrint = true }.encodeToString(JsonObject.serializer(), json)
+                    }
+                    Card(modifier = Modifier.fillMaxWidth()) {
+                        SelectionContainer {
+                            Text(
+                                pretty,
+                                modifier = Modifier
+                                    .padding(16.dp)
+                                    .horizontalScroll(rememberScrollState()),
+                                style = MaterialTheme.typography.bodySmall,
+                                fontFamily = FontFamily.Monospace
+                            )
+                        }
+                    }
                 }
-                state.error?.let {
-                    Text(
-                        it,
-                        color = MaterialTheme.colorScheme.error,
-                        style = MaterialTheme.typography.bodySmall
-                    )
+                state.error?.let { err ->
+                    Card(
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            err,
+                            color = MaterialTheme.colorScheme.onErrorContainer,
+                            style = MaterialTheme.typography.bodySmall,
+                            modifier = Modifier.padding(16.dp)
+                        )
+                    }
                 }
             }
         }
