@@ -6,7 +6,7 @@ import com.msa.finhub.core.network.handler.HttpClientFactory
 import com.msa.finhub.feature.inquiry.data.remote.InquiryApi
 import com.msa.finhub.feature.inquiry.domain.repository.InquiryRepository
 import kotlinx.serialization.json.JsonObject
-
+import timber.log.Timber
 class InquiryRepositoryImpl(
     private val api: InquiryApi,
     private val tokenStore: AuthTokenStore
@@ -15,7 +15,12 @@ class InquiryRepositoryImpl(
         path: String,
         params: Map<String, String>
     ): NetworkResult<JsonObject> {
-        HttpClientFactory.setToken(tokenStore.get())
-        return api.fetch(path, params)
+        Timber.d("Repository inquiry path=${'$'}path params=${'$'}params")
+        val token = tokenStore.get()
+        Timber.d("Repository using token=${'$'}token")
+        HttpClientFactory.setToken(token)
+        val result = api.fetch(path, params)
+        Timber.d("Repository result=${'$'}result")
+        return result
     }
 }

@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.JsonObject
-
+import timber.log.Timber
 class InquiryViewModel(
     private val inquiry: InquiryUseCase
 ) : ViewModel() {

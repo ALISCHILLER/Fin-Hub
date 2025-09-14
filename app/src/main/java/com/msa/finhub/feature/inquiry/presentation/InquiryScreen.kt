@@ -21,6 +21,7 @@ import com.msa.finhub.R
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.snapshots.SnapshotStateMap
+import timber.log.Timber
 
 private fun <T> stateMapSaver() = Saver<SnapshotStateMap<String, T>, Map<String, T>>(
     save = { HashMap(it) },
@@ -45,6 +46,7 @@ fun InquiryScreen(
         mutableStateMapOf<String, Boolean>()
     }
     LaunchedEffect(spec) {
+        Timber.d("InquiryScreen launched for spec: ${'$'}{spec.path}")
         textValues.clear(); boolValues.clear()
         spec.fields.forEach { field ->
             when (field.type) {
@@ -106,6 +108,7 @@ fun InquiryScreen(
 
                 Button(
                     onClick = {
+                        Timber.d("Submitting inquiry with text=${'$'}textValues bool=${'$'}boolValues")
                         viewModel.submit(spec, textValues, boolValues)
                     },
                     modifier = Modifier.fillMaxWidth()
