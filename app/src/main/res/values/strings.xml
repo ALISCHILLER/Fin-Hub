@@ -39,4 +39,37 @@
     <string name="error_title_server">خطای سرور</string>
     <string name="error_title_application">خطای برنامه</string>
     <string name="error_title_unknown">خطای ناشناخته</string>
+
+    <!-- Settings screen -->
+    <string name="settings_title">تنظیمات</string>
+    <string name="settings_account_header">حساب کاربری</string>
+    <string name="settings_user">کاربر: %1$s</string>
+    <string name="settings_login_header">ورود</string>
+    <string name="settings_remember_login">حفظ ورود</string>
+    <string name="settings_remember_description_saved">اطلاعات ورود شما ذخیره شده است.</string>
+    <string name="settings_remember_description_unsaved">در صورت فعال‌سازی، هنگام ورود ذخیره می‌شود.</string>
+    <string name="settings_clear_saved_login">حذف اطلاعات ورود ذخیره‌شده</string>
+    <string name="settings_security_header">امنیت و بیومتریک</string>
+    <string name="settings_bio_not_supported">دستگاه شما از بیومتریک پشتیبانی نمی‌کند.</string>
+    <string name="settings_bio_enable_hint">برای فعال‌سازی بیومتریک، ابتدا «حفظ ورود» را روشن کنید.</string>
+    <string name="settings_bio_login">ورود با اثرانگشت / Face</string>
+    <string name="settings_bio_enabled_description">بیومتریک فعال است. برای ورود سریع از اثرانگشت/Face استفاده می‌شود.</string>
+    <string name="settings_bio_disabled_description">با فعال‌سازی، بازیابی رمز تنها با بیومتریک ممکن می‌شود.</string>
+    <string name="settings_bio_setup">راه‌اندازی بیومتریک</string>
+    <string name="settings_danger_zone">منطقه حساس</string>
+    <string name="settings_logout">خروج از حساب</string>
+    <string name="settings_logout_warning">با خروج از حساب، فقط توکن پاک می‌شود؛ اگر «حفظ ورود» فعال باشد، اطلاعات ورود و بیومتریک باقی می‌مانند.</string>
+    <string name="settings_footer">© %1$d FinHub  تولید و توسعه توسط گروه نرم افزار گروه صنعتی زر</string>
+    <string name="dialog_logout_message">می‌خواهید خارج شوید؟</string>
+    <string name="dialog_logout_confirm">بله، خروج</string>
+    <string name="dialog_cancel">انصراف</string>
+    <string name="dialog_clear_creds_title">حذف اطلاعات ورود</string>
+    <string name="dialog_clear_creds_message">اطلاعات ورود ذخیره‌شده پاک شود؟</string>
+    <string name="dialog_clear_creds_confirm">بله، حذف</string>
+    <string name="dialog_disable_bio_title">خاموش کردن بیومتریک</string>
+    <string name="dialog_disable_bio_message">ورود با بیومتریک غیرفعال شود؟</string>
+    <string name="dialog_disable_bio_confirm">بله، خاموش شود</string>
+    <string name="error_title_general">خطا</string>
+    <string name="loading_logging_out">در حال خروج…</string>
+    <string name="loading_setting_biometric">در حال تنظیم بیومتریک…</string>
 </resources>

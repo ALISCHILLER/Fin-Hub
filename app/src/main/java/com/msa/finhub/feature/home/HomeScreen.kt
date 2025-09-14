@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.msa.finhub.feature.inquiry.presentation.InquirySpecs
-
+import androidx.compose.runtime.remember
 data class HomeItem(
     val title: String,
     val route: String,
@@ -30,16 +30,19 @@ data class HomeItem(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navController: NavController) {
-    val items = listOf(
-        HomeItem("استعلام چک صیاد", InquirySpecs.SayadChequeInquiry.route) { Icon(Icons.Outlined.Check, null) },
-        HomeItem("رنگ چک (حقیقی)", InquirySpecs.SayadCheckColorStatus.route) { Icon(Icons.Outlined.VerifiedUser, null) },
-        HomeItem("رنگ چک (حقوقی)", InquirySpecs.SayadCheckColorLegalStatus.route) { Icon(Icons.Outlined.VerifiedUser, null) },
-        HomeItem("احراز هویت حقیقی", InquirySpecs.PersonalIdentity.route) { Icon(Icons.Outlined.PersonSearch, null) },
-        HomeItem("تطابق کدملی و شِبا/چک", InquirySpecs.NationalCodeSayadIdIdentity.route) { Icon(Icons.Outlined.VerifiedUser, null) },
-        HomeItem("تطابق کدملی و موبایل", InquirySpecs.MobileNationalCode.route) { Icon(Icons.Outlined.VerifiedUser, null) },
-        HomeItem("استعلام ضمانت‌های فرد", InquirySpecs.GuarantyInquiry.route) { Icon(Icons.Outlined.VerifiedUser, null) },
-        HomeItem("تأیید چک توسط گیرنده", InquirySpecs.SayadAcceptChequeReciever.route) { Icon(Icons.Outlined.Check, null) },
-    )
+
+    val items = remember {
+        listOf(
+            HomeItem("استعلام چک صیاد", InquirySpecs.SayadChequeInquiry.route) { Icon(Icons.Outlined.Check, null) },
+            HomeItem("رنگ چک (حقیقی)", InquirySpecs.SayadCheckColorStatus.route) { Icon(Icons.Outlined.VerifiedUser, null) },
+            HomeItem("رنگ چک (حقوقی)", InquirySpecs.SayadCheckColorLegalStatus.route) { Icon(Icons.Outlined.VerifiedUser, null) },
+            HomeItem("احراز هویت حقیقی", InquirySpecs.PersonalIdentity.route) { Icon(Icons.Outlined.PersonSearch, null) },
+            HomeItem("تطابق کدملی و شِبا/چک", InquirySpecs.NationalCodeSayadIdIdentity.route) { Icon(Icons.Outlined.VerifiedUser, null) },
+            HomeItem("تطابق کدملی و موبایل", InquirySpecs.MobileNationalCode.route) { Icon(Icons.Outlined.VerifiedUser, null) },
+            HomeItem("استعلام ضمانت‌های فرد", InquirySpecs.GuarantyInquiry.route) { Icon(Icons.Outlined.VerifiedUser, null) },
+            HomeItem("تأیید چک توسط گیرنده", InquirySpecs.SayadAcceptChequeReciever.route) { Icon(Icons.Outlined.Check, null) },
+        )
+    }
 
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
         LazyColumn(
@@ -47,7 +50,7 @@ fun HomeScreen(navController: NavController) {
             contentPadding = PaddingValues(vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            items(items) { item ->
+            items(items, key = { it.route }) { item ->
                 ListItem(
                     headlineContent = { Text(item.title) },
                     leadingContent = { item.icon() },

@@ -15,6 +15,10 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.msa.finhub.ui.components.ErrorDialog
 import com.msa.finhub.ui.components.LoadingOverlay
+import androidx.compose.ui.res.stringResource
+import com.msa.finhub.R
+import androidx.compose.runtime.remember
+import java.time.LocalDate
 
 @Composable
 fun SettingsScreen(
@@ -23,7 +27,7 @@ fun SettingsScreen(
 ) {
     val cs = MaterialTheme.colorScheme
     val ty = MaterialTheme.typography
-
+    val currentYear = remember { LocalDate.now().year }
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
     Box(Modifier.fillMaxSize()) {
         Column(
@@ -33,21 +37,21 @@ fun SettingsScreen(
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Text("تنظیمات", style = ty.headlineSmall.copy(fontWeight = FontWeight.Bold))
+            Text(stringResource(R.string.settings_title), style = ty.headlineSmall.copy(fontWeight = FontWeight.Bold))
 
             // حساب کاربری
             ElevatedCard(shape = RoundedCornerShape(16.dp)) {
                 Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text("حساب کاربری", style = ty.titleMedium)
+                    Text(stringResource(R.string.settings_account_header), style = ty.titleMedium)
                     val username = state.username ?: "—"
-                    Text("کاربر: $username", style = ty.bodyMedium, color = cs.onSurfaceVariant)
+                    Text(stringResource(R.string.settings_user, username), style = ty.bodyMedium, color = cs.onSurfaceVariant)
                 }
             }
 
             // Remember me
             ElevatedCard(shape = RoundedCornerShape(16.dp)) {
                 Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Text("ورود", style = ty.titleMedium)
+                    Text(stringResource(R.string.settings_login_header), style = ty.titleMedium)
 
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -55,12 +59,14 @@ fun SettingsScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Column(Modifier.weight(1f)) {
-                            Text("حفظ ورود", style = ty.bodyLarge)
+                            Text(stringResource(R.string.settings_remember_login), style = ty.bodyLarge)
                             Text(
-                                if (state.hasSavedCredentials)
-                                    "اطلاعات ورود شما ذخیره شده است."
-                                else
-                                    "در صورت فعال‌سازی، هنگام ورود ذخیره می‌شود.",
+                                stringResource(
+                                    if (state.hasSavedCredentials)
+                                        R.string.settings_remember_description_saved
+                                    else
+                                        R.string.settings_remember_description_unsaved
+                                ),
                                 style = ty.bodySmall,
                                 color = cs.onSurfaceVariant
                             )
@@ -75,19 +81,19 @@ fun SettingsScreen(
                         onClick = { onEvent(SettingsEvent.ClickClearCreds) },
                         enabled = state.hasSavedCredentials,
                         modifier = Modifier.fillMaxWidth()
-                    ) { Text("حذف اطلاعات ورود ذخیره‌شده") }
+                    ) { Text(stringResource(R.string.settings_clear_saved_login)) }
                 }
             }
 
             // امنیت و بیومتریک
             ElevatedCard(shape = RoundedCornerShape(16.dp)) {
                 Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Text("امنیت و بیومتریک", style = ty.titleMedium)
+                    Text(stringResource(R.string.settings_security_header), style = ty.titleMedium)
 
                     val canEnableBio = state.biometricAvailable && state.hasSavedCredentials
                     val helper = when {
-                        !state.biometricAvailable -> "دستگاه شما از بیومتریک پشتیبانی نمی‌کند."
-                        !state.hasSavedCredentials -> "برای فعال‌سازی بیومتریک، ابتدا «حفظ ورود» را روشن کنید."
+                        !state.biometricAvailable -> stringResource(R.string.settings_bio_not_supported)
+                        !state.hasSavedCredentials -> stringResource(R.string.settings_bio_enable_hint)
                         else -> null
                     }
 
@@ -97,12 +103,14 @@ fun SettingsScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Column(Modifier.weight(1f)) {
-                            Text("ورود با اثرانگشت / Face", style = ty.bodyLarge)
+                            Text(stringResource(R.string.settings_bio_login), style = ty.bodyLarge)
                             Text(
-                                helper ?: if (state.biometricEnabled)
-                                    "بیومتریک فعال است. برای ورود سریع از اثرانگشت/Face استفاده می‌شود."
-                                else
-                                    "با فعال‌سازی، بازیابی رمز تنها با بیومتریک ممکن می‌شود.",
+                                helper ?: stringResource(
+                                    if (state.biometricEnabled)
+                                        R.string.settings_bio_enabled_description
+                                    else
+                                        R.string.settings_bio_disabled_description
+                                ),
                                 style = ty.bodySmall,
                                 color = cs.onSurfaceVariant
                             )
@@ -122,7 +130,7 @@ fun SettingsScreen(
                             onClick = { onEvent(SettingsEvent.ClickEnableBiometric) },
                             enabled = !state.isBiometricBusy,
                             modifier = Modifier.fillMaxWidth()
-                        ) { Text("راه‌اندازی بیومتریک") }
+                        ) { Text(stringResource(R.string.settings_bio_setup)) }
                     }
                 }
             }
@@ -130,7 +138,7 @@ fun SettingsScreen(
             // خروج
             ElevatedCard(shape = RoundedCornerShape(16.dp)) {
                 Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Text("منطقه حساس", style = ty.titleMedium, color = cs.error)
+                    Text(stringResource(R.string.settings_danger_zone), style = ty.titleMedium, color = cs.error)
                     Button(
                         onClick = { onEvent(SettingsEvent.ClickLogout) },
                         modifier = Modifier.fillMaxWidth(),
@@ -138,58 +146,55 @@ fun SettingsScreen(
                             containerColor = cs.error,
                             contentColor = cs.onError
                         )
-                    ) { Text("خروج از حساب") }
+                    ) {Text(stringResource(R.string.settings_logout)) }
 
                     Text(
-                        "با خروج از حساب، فقط توکن پاک می‌شود؛ اگر «حفظ ورود» فعال باشد، اطلاعات ورود و بیومتریک باقی می‌مانند.",
+                        stringResource(R.string.settings_footer, java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)),
                         style = ty.labelSmall, color = cs.onSurfaceVariant
                     )
                 }
             }
 
             Spacer(Modifier.height(24.dp))
-            Text("© ${java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)} FinHub  تولید و توسعه توسط گروه نرم افزار گروه صنعتی زر",
+            Text("© $currentYear FinHub  تولید و توسعه توسط گروه نرم افزار گروه صنعتی زر",
                 style = ty.labelSmall, color = cs.onSurfaceVariant)
         }
 
         // دیالوگ‌ها
         if (state.showLogoutConfirm) {
-            AlertDialog(
-                onDismissRequest = { onEvent(SettingsEvent.DismissLogout) },
-                title = { Text("خروج از حساب") },
-                text = { Text("می‌خواهید خارج شوید؟") },
-                confirmButton = { TextButton(onClick = { onEvent(SettingsEvent.ConfirmLogout) }) { Text("بله، خروج") } },
-                dismissButton = { TextButton(onClick = { onEvent(SettingsEvent.DismissLogout) }) { Text("انصراف") } }
+            ConfirmDialog(
+                title = stringResource(R.string.settings_logout),
+                message = stringResource(R.string.dialog_logout_message),
+                onConfirm = { onEvent(SettingsEvent.ConfirmLogout) },
+                onDismiss = { onEvent(SettingsEvent.DismissLogout) }
             )
         }
 
         if (state.showClearCredsConfirm) {
-            AlertDialog(
-                onDismissRequest = { onEvent(SettingsEvent.DismissClearCreds) },
-                title = { Text("حذف اطلاعات ورود") },
-                text = { Text("اطلاعات ورود ذخیره‌شده پاک شود؟") },
-                confirmButton = { TextButton(onClick = { onEvent(SettingsEvent.ConfirmClearCreds) }) { Text("بله، حذف") } },
-                dismissButton = { TextButton(onClick = { onEvent(SettingsEvent.DismissClearCreds) }) { Text("انصراف") } }
+            ConfirmDialog(
+                title = stringResource(R.string.dialog_clear_creds_title),
+                message = stringResource(R.string.dialog_clear_creds_message),
+                onConfirm = { onEvent(SettingsEvent.ConfirmClearCreds) },
+                onDismiss = { onEvent(SettingsEvent.DismissClearCreds) }
             )
         }
 
         if (state.showDisableBiometricConfirm) {
-            AlertDialog(
-                onDismissRequest = { onEvent(SettingsEvent.DismissDisableBiometric) },
-                title = { Text("خاموش کردن بیومتریک") },
-                text = { Text("ورود با بیومتریک غیرفعال شود؟") },
-                confirmButton = { TextButton(onClick = { onEvent(SettingsEvent.ConfirmDisableBiometric) }) { Text("بله، خاموش شود") } },
-                dismissButton = { TextButton(onClick = { onEvent(SettingsEvent.DismissDisableBiometric) }) { Text("انصراف") } }
+            ConfirmDialog(
+                title = stringResource(R.string.dialog_disable_bio_title),
+                message = stringResource(R.string.dialog_disable_bio_message),
+                onConfirm = { onEvent(SettingsEvent.ConfirmDisableBiometric) },
+                onDismiss = { onEvent(SettingsEvent.DismissDisableBiometric) }
             )
         }
 
         if (state.error?.isNotBlank() == true) {
-            ErrorDialog(title = "خطا", message = state.error, onDismiss = { onEvent(SettingsEvent.DismissError) })
+            ErrorDialog(title = stringResource(R.string.error_title_general), message = state.error, onDismiss = { onEvent(SettingsEvent.DismissError) })
         }
 
         LoadingOverlay(
             show = state.isLoggingOut || state.isBiometricBusy,
-            text = if (state.isLoggingOut) "در حال خروج…" else "در حال تنظیم بیومتریک…",
+            text = stringResource(if (state.isLoggingOut) R.string.loading_logging_out else R.string.loading_setting_biometric),
             modifier = Modifier.fillMaxSize()
         )
     }
