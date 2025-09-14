@@ -28,7 +28,7 @@ class InquiryApiImpl : BaseRepository(), InquiryApi {
         }
         val url = if (query.isNotEmpty()) "${'$'}path?${'$'}query" else path
         Timber.d("API final url=${'$'}url")
-        val result = get(url)
+        val result: NetworkResult<JsonObject> = get(url)
         Timber.d("API result=${'$'}result")
         return result
     }
