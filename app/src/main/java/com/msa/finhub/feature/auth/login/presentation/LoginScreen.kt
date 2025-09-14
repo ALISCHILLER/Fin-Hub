@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.msa.finhub.ui.components.ErrorDialog
 import com.msa.finhub.ui.components.LoadingDialog
-
+import com.msa.finhub.ui.components.FinOutlinedTextField
 @Composable
 fun LoginScreen(
     state: LoginUiState,
@@ -100,29 +100,19 @@ fun LoginScreen(
                             .fillMaxWidth()
                     ) {
                         // --- فیلد کد پرسنلی ---
-                        OutlinedTextField(
+                        FinOutlinedTextField(
                             value = code,
                             onValueChange = onCodeChange,
-                            label = { Text("کد پرسنلی") },
-                            placeholder = { Text("مثال: M_mohamadkh") },
-                            singleLine = true,
-                            leadingIcon = { Icon(Icons.Outlined.Badge, contentDescription = null) },
+                            label = "کد پرسنلی",
+                            placeholder = "مثال: M_mohamadkh",
+                            leading = { Icon(Icons.Outlined.Badge, contentDescription = null) },
                             isError = state.error?.contains("کد پرسنلی") == true,
-                            supportingText = {
-                                state.error?.takeIf { it.contains("کد پرسنلی") }?.let { errorText ->
-                                    Text(
-                                        text = errorText,
-                                        color = cs.error,
-                                        style = typography.labelSmall
-                                    )
-                                }
-                            },
+                            supportingText = state.error?.takeIf { it.contains("کد پرسنلی") },
                             keyboardOptions = KeyboardOptions(
                                 keyboardType = KeyboardType.Ascii,
                                 imeAction = ImeAction.Next,
                                 autoCorrect = false
                             ),
-                            colors = getTextFieldColors(cs),
                             modifier = Modifier.fillMaxWidth()
                         )
 

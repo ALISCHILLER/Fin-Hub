@@ -11,7 +11,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.*
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 
 @Composable
 fun FinOutlinedTextField(
@@ -22,7 +24,9 @@ fun FinOutlinedTextField(
     leading: (@Composable () -> Unit)? = null,
     isError: Boolean = false,
     supportingText: String? = null,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default
 ) {
     val cs = MaterialTheme.colorScheme
     OutlinedTextField(
@@ -34,6 +38,8 @@ fun FinOutlinedTextField(
         singleLine = true,
         isError = isError,
         supportingText = { if (isError && supportingText != null) Text(supportingText, color = cs.error) },
+        keyboardOptions = keyboardOptions,
+        keyboardActions = keyboardActions,
         colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = cs.primary,
             unfocusedBorderColor = cs.outline,
@@ -67,8 +73,17 @@ fun FinPasswordField(
         singleLine = true,
         leadingIcon = leading,
         trailingIcon = {
-            IconButton(onClick = { visible = !visible }) {
-                Icon(if (visible) Icons.Outlined.VisibilityOff else Icons.Outlined.Visibility, null)
+            IconButton(
+                onClick = { visible = !visible },
+                modifier = Modifier.semantics {
+                    contentDescription = if (visible) "مخفی کردن رمز" else "نمایش رمز"
+                    stateDescription = if (visible) "رمز قابل مشاهده است" else "رمز مخفی است"
+                }
+            ) {
+                Icon(
+                    imageVector = if (visible) Icons.Outlined.VisibilityOff else Icons.Outlined.Visibility,
+                    contentDescription = null
+                )
             }
         },
         visualTransformation = if (visible) VisualTransformation.None else PasswordVisualTransformation(),
