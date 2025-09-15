@@ -32,6 +32,9 @@ import com.msa.finhub.ui.components.FinOutlinedTextField
 import com.msa.finhub.ui.components.FinPasswordField
 import org.koin.core.context.loadKoinModules
 import org.koin.core.context.unloadKoinModules
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import com.msa.finhub.R
 
 private const val DEV_TAP_THRESHOLD = 5
 @Composable
@@ -115,7 +118,10 @@ fun LoginScreen(
                 Spacer(Modifier.height(32.dp))
 
                 Text(
-                    text = "© ${java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)} FinHub   تولید و توسعه توسط گروه نرم افزار گروه صنعتی زر",
+                    text = stringResource(
+                        R.string.settings_footer,
+                        java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)
+                    ),
                     style = typography.labelSmall,
                     color = cs.onSurfaceVariant.copy(alpha = 0.6f),
                     textAlign = TextAlign.Start
@@ -165,12 +171,23 @@ fun LoginScreen(
 private fun DeveloperTitle(onTap: () -> Unit, modifier: Modifier = Modifier) {
     val typography = MaterialTheme.typography
     val cs = MaterialTheme.colorScheme
-    Text(
-        text = "FinHub",
-        style = typography.headlineLarge.copy(fontWeight = FontWeight.ExtraBold),
-        color = cs.primary,
-        modifier = modifier.clickable { onTap() }
-    )
+    Row(
+        modifier = modifier.clickable { onTap() },
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.ic_launcher_foreground),
+            contentDescription = null,
+            tint = cs.primary,
+            modifier = Modifier.size(48.dp)
+        )
+        Spacer(Modifier.width(8.dp))
+        Text(
+            text = stringResource(id = R.string.app_name),
+            style = typography.headlineLarge.copy(fontWeight = FontWeight.ExtraBold),
+            color = cs.primary
+        )
+    }
 }
 
 @Composable
