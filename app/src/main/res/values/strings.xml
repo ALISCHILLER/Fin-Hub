@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ZarHesabdar</string>
+    <string name="app_name">زر حسابدار</string>
 
 
     <!-- Network errors -->
@@ -71,7 +71,7 @@
     <string name="settings_danger_zone">منطقه حساس</string>
     <string name="settings_logout">خروج از حساب</string>
     <string name="settings_logout_warning">با خروج از حساب، فقط توکن پاک می‌شود؛ اگر «حفظ ورود» فعال باشد، اطلاعات ورود و بیومتریک باقی می‌مانند.</string>
-    <string name="settings_footer">© %1$d ZarHesabdar  تولید و توسعه توسط گروه نرم افزار گروه صنعتی زر</string>
+    <string name="settings_footer">© %1$d زرحسابدار  تولید و توسعه توسط گروه نرم افزار گروه صنعتی زر</string>
     <string name="dialog_logout_message">می‌خواهید خارج شوید؟</string>
     <string name="dialog_logout_confirm">بله، خروج</string>
     <string name="dialog_confirm">بله</string>
@@ -85,4 +85,7 @@
     <string name="error_title_general">خطا</string>
     <string name="loading_logging_out">در حال خروج…</string>
     <string name="loading_setting_biometric">در حال تنظیم بیومتریک…</string>
+
+    <string name="zar_logo_content_description">logo</string>
+    <string name="wellcom">به اپلیکیشن زر حسابدار خوش امدید</string>
 </resources>

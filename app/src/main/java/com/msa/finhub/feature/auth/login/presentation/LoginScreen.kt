@@ -1,8 +1,10 @@
 package com.msa.finhub.feature.auth.login.presentation
 
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -16,6 +18,9 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.font.FontWeight
@@ -95,7 +100,7 @@ fun LoginScreen(
 
 
                 Text(
-                    text = "به حساب کاری خود وارد شوید",
+                    text = stringResource(R.string.wellcom),
                     style = typography.titleMedium,
                     color = cs.onSurfaceVariant,
                     textAlign = TextAlign.End
@@ -170,18 +175,22 @@ fun LoginScreen(
 
 @Composable
 private fun DeveloperTitle(onTap: () -> Unit, modifier: Modifier = Modifier) {
-    val typography = MaterialTheme.typography
-    val cs = MaterialTheme.colorScheme
+    val isDark = isSystemInDarkTheme()
+    val onBg = MaterialTheme.colorScheme.onBackground
+
+    val PastelPeriwinkle400 = Color(0xFF6E7FF3)
+
+
+    val tintColor = if (isDark) onBg else PastelPeriwinkle400
+
     Row(
         modifier = modifier.clickable { onTap() },
         verticalAlignment = Alignment.CenterVertically
     ) {
-        FinHubLogoPro()
-        Spacer(Modifier.width(8.dp))
-        Text(
-            text = stringResource(id = R.string.app_name),
-            style = typography.headlineLarge.copy(fontWeight = FontWeight.ExtraBold),
-            color = cs.primary
+        Image(
+            painter = painterResource(id = R.drawable.zar_logo), // نسخه‌ی تک‌رنگ (سفید/مشکی) بهتره
+            contentDescription = stringResource(id = R.string.zar_logo_content_description),
+            colorFilter = ColorFilter.tint(tintColor, blendMode = BlendMode.SrcIn)
         )
     }
 }
@@ -268,13 +277,7 @@ private fun LoginForm(
                     )
                 }
 
-                TextButton(onClick = { /* TODO: Forgot password */ }) {
-                    Text(
-                        text = "فراموشی رمز؟",
-                        style = typography.labelSmall,
-                        color = cs.primary
-                    )
-                }
+
             }
 
             Spacer(Modifier.height(24.dp))
