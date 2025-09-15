@@ -16,6 +16,8 @@ import kotlinx.serialization.json.JsonPrimitive
 
 private val FIELD_LABELS = mapOf(
     "hasError" to "وضعیت خطا",
+    "deathStatus" to "وضعیت حیات",
+    "officeName" to "آدرس",
     "responseCode" to "کد پاسخ",
     "trackId" to "شناسه رهگیری",
     "status" to "وضعیت",
