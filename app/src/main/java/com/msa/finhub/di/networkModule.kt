@@ -2,6 +2,7 @@ package com.msa.finhub.di
 
 import android.content.Context
 import com.msa.finhub.BuildConfig
+import com.msa.finhub.core.datastore.DevPreferences
 import com.msa.finhub.core.network.handler.HttpClientFactory
 import com.msa.finhub.core.network.handler.NetworkHandler
 import com.msa.finhub.core.network.model.CacheConfig
@@ -11,12 +12,13 @@ import com.msa.finhub.core.network.model.SSLConfig
 import com.msa.finhub.core.network.utils.NetworkStatusMonitor
 import io.ktor.client.HttpClient
 import org.koin.android.ext.koin.androidContext
+import org.koin.compose.getKoin
 import org.koin.dsl.module
 
 val networkModule = module {
 
     single {
-        val base = getKoin().getProperty("BASE_URL") ?: "http://10.252.112.93:8282/"
+        val base = DevPreferences.getBaseUrl(androidContext())
         NetworkConfig(
             baseUrl        = base,
             connectTimeout = 15_000,

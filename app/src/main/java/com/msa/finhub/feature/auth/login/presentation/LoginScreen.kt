@@ -1,21 +1,22 @@
 package com.msa.finhub.feature.auth.login.presentation
 
+import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Badge
 import androidx.compose.material.icons.outlined.Lock
-import androidx.compose.material.icons.outlined.Visibility
-import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.*
@@ -23,10 +24,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import com.msa.finhub.core.datastore.DevPreferences
+import com.msa.finhub.di.networkModule
+import com.msa.finhub.feature.settings.presentation.SettingsEffect
 import com.msa.finhub.ui.components.ErrorDialog
 import com.msa.finhub.ui.components.LoadingDialog
 import com.msa.finhub.ui.components.FinOutlinedTextField
 import com.msa.finhub.ui.components.FinPasswordField
+import org.koin.core.context.loadKoinModules
+import org.koin.core.context.unloadKoinModules
+
+private const val DEV_TAP_THRESHOLD = 5
 @Composable
 fun LoginScreen(
     state: LoginUiState,
@@ -46,8 +54,11 @@ fun LoginScreen(
     val cs = MaterialTheme.colorScheme
     val typography = MaterialTheme.typography
     val scrollState = rememberScrollState()
-   // var passwordVisible by remember { mutableStateOf(false) }
 
+    val context = LocalContext.current
+    var tapCount by remember { mutableStateOf(0) }
+    var showBaseDialog by remember { mutableStateOf(false) }
+    var baseUrl by rememberSaveable { mutableStateOf("") }
     // ✅ تمام صفحه را RTL می‌کنیم — دیگر نیازی به Modifier.layoutDirection نیست
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
         Box(
@@ -67,13 +78,19 @@ fun LoginScreen(
             ) {
                 Spacer(Modifier.height(48.dp))
 
-                // --- لوگو/برند (چپ‌چین برای لوگوی لاتین) ---
-                // 🚫 دیگر از Modifier.layoutDirection استفاده نمی‌کنیم — فقط متن را Ltr نشان می‌دهیم
                 Text(
                     text = "FinHub",
                     style = typography.headlineLarge.copy(fontWeight = FontWeight.ExtraBold),
                     color = cs.primary,
-                    modifier = Modifier // ← بدون layoutDirection
+                    modifier = Modifier
+                        .clickable {
+                            tapCount++
+                            if (tapCount >= DEV_TAP_THRESHOLD) {
+                                tapCount = 0
+                                baseUrl = DevPreferences.getBaseUrl(context)
+                                showBaseDialog = true
+                            }
+                        }
                 )
 
                 Spacer(Modifier.height(8.dp))
@@ -239,6 +256,38 @@ fun LoginScreen(
                 Spacer(Modifier.height(24.dp))
             }
 
+            if (showBaseDialog) {
+                AlertDialog(
+                    onDismissRequest = { showBaseDialog = false },
+                    title = { Text("Base URL") },
+                    text = {
+                        OutlinedTextField(
+                            value = baseUrl,
+                            onValueChange = { baseUrl = it },
+                            singleLine = true,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            val url = baseUrl.trim()
+                            DevPreferences.setBaseUrl(context, url)
+                            unloadKoinModules(networkModule)
+                            loadKoinModules(networkModule)
+                            Toast.makeText(context, "آدرس ذخیره شد", Toast.LENGTH_SHORT).show()
+                            showBaseDialog = false
+                        }) {
+                            Text("ذخیره")
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { showBaseDialog = false }) {
+                            Text("انصراف")
+                        }
+                    }
+                )
+            }
+
             // --- دیالوگ خطا ---
             if (!state.isLoading && state.error?.isNotBlank() == true) {
                 ErrorDialog(
@@ -261,15 +310,3 @@ fun LoginScreen(
     }
 }
 
-// --- تابع کمکی برای رنگ‌های TextField ---
-//@Composable
-//private fun getTextFieldColors(cs: ColorScheme) = OutlinedTextFieldDefaults.colors(
-//    focusedBorderColor = cs.primary,
-//    unfocusedBorderColor = cs.outline,
-//    cursorColor = cs.primary,
-//    focusedLabelColor = cs.primary,
-//    errorBorderColor = cs.error,
-//    errorCursorColor = cs.error,
-//    errorLeadingIconColor = cs.error,
-//    errorTrailingIconColor = cs.error
-//)
