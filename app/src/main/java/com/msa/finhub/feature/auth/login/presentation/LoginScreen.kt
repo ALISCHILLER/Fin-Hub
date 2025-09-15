@@ -35,6 +35,7 @@ import org.koin.core.context.unloadKoinModules
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.msa.finhub.R
+import com.msa.finhub.ui.components.FinHubLogoPro
 
 private const val DEV_TAP_THRESHOLD = 5
 @Composable
@@ -175,12 +176,7 @@ private fun DeveloperTitle(onTap: () -> Unit, modifier: Modifier = Modifier) {
         modifier = modifier.clickable { onTap() },
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(
-            painter = painterResource(id = R.drawable.ic_launcher_foreground),
-            contentDescription = null,
-            tint = cs.primary,
-            modifier = Modifier.size(48.dp)
-        )
+        FinHubLogoPro()
         Spacer(Modifier.width(8.dp))
         Text(
             text = stringResource(id = R.string.app_name),
