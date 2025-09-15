@@ -54,14 +54,14 @@ fun LoginScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .background(cs.background)
-                .systemBarsPadding()
-                .imePadding()
+                .statusBarsPadding()
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(horizontal = 24.dp)
-                    .verticalScroll(scrollState),
+                    .verticalScroll(scrollState)
+                    .navigationBarsPadding(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top
             ) {
