@@ -36,23 +36,26 @@ import androidx.compose.ui.unit.dp
 import kotlin.math.max
 import kotlin.math.sqrt
 
+private val LogoBaseBlue = Color(0xFF0052D4)
+private val LogoAccentCyan = Color(0xFF00C6FF)
+
 /**
- * لوگوی حرفه‌ای: اُرب گرادیانی + رینگ براق چرخان + Z با گرادیان، کانتور، سایه‌ی نرم و کنتراست هوشمند.
- * - احترام به Reduced Motion (با پارامتر)
- * - اصلاح RoundRect با CornerRadius
+ * لوگوی حرفه‌ای: اُرب گرادیانی + رینگ براق چرخان + Z ارتقایافته (Ribbon + Fold + Highlight)
+ * - سازگار با Reduced Motion (غیرفعال کردن انیمیشن با preferReducedMotion)
+ * - کنتراست هوشمند برای onColor
  */
 @Composable
 fun FinHubLogoPro(
     modifier: Modifier = Modifier,
     dimension: Dp = 64.dp,
-    baseColor: Color = MaterialTheme.colorScheme.primary,
-    accentColor: Color = MaterialTheme.colorScheme.secondary,
-    onBase: Color = MaterialTheme.colorScheme.onPrimary,
+    baseColor: Color = LogoBaseBlue,
+    accentColor: Color = LogoAccentCyan,
+    onBase: Color = Color.White,
     animateRing: Boolean = true,
     preferReducedMotion: Boolean = false,
-    contentDescription: String = "لوگوی حرفه‌ای فین‌هاب"
+    contentDescription: String = "لوگوی حرفه‌ای فین‌هاب",
+    zTiltDegrees: Float = -6f // کمی کج برای حس حرکت
 ) {
-    // انیمیشن چرخش رینگ (در صورت نیاز)
     val effectiveAnimate = animateRing && !preferReducedMotion
     val rotation: Float = if (effectiveAnimate) {
         val t = rememberInfiniteTransition(label = "ring")
@@ -65,7 +68,7 @@ fun FinHubLogoPro(
         r
     } else 22f
 
-    // اگر onBase با baseColor کنتراست خوبی نداشت، بهترین رو انتخاب کن
+    // اگر onBase خوانا نباشه، بهترین رو انتخاب کن
     val autoOn = remember(baseColor, onBase) { bestReadableOn(baseColor, onBase) }
 
     Canvas(
@@ -79,42 +82,35 @@ fun FinHubLogoPro(
         val r = size.minDimension / 2f
         val center = this.center
 
-        // ضخامت‌ها (مقیاس‌پذیر + حداقل منطقی)
+        // ضخامت‌ها
         val minStroke = 2.dp.toPx()
-        val ringWidth = max(r * 0.10f, minStroke)          // رینگ بیرونی
-        val innerRingWidth = max(r * 0.03f, minStroke)     // رینگ داخلی ظریف
-        val zThickness = max(r * 0.22f, 3.dp.toPx())       // ضخامت Z
+        val ringWidth = max(r * 0.10f, minStroke)
+        val innerRingWidth = max(r * 0.03f, minStroke)
+        val zThickness = max(r * 0.22f, 3.dp.toPx())
         val zStroke = max(zThickness * 0.18f, 1.5.dp.toPx())
         val zShadowOffset = max(r * 0.03f, 1.5.dp.toPx())
 
-        // 1) پس‌زمینه‌ی اُرب با گرادیان + ویگنت برای عمق
+        // 1) اُرب گرادیانی + ویگنت
         val orbBrush = Brush.radialGradient(
-            colors = listOf(
-                baseColor.copy(alpha = 1f),
-                baseColor.copy(alpha = 0.92f)
-            ),
-            center = center,
-            radius = r
+            colors = listOf(baseColor.lighten(0.10f), baseColor.darken(0.10f)),
+            center = center, radius = r
         )
         drawCircle(brush = orbBrush, radius = r, center = center)
 
         val vignette = Brush.radialGradient(
             colors = listOf(Color.Transparent, Color.Black.copy(alpha = 0.18f)),
-            center = center,
-            radius = r * 1.05f
+            center = center, radius = r * 1.05f
         )
         drawCircle(brush = vignette, radius = r, center = center, blendMode = BlendMode.Multiply)
 
-        // 2) رینگ بیرونی براق با گرادیان چرخشی
+        // 2) رینگ براق
         inset(ringWidth / 2f) {
             rotate(rotation) {
                 val sweep = Brush.sweepGradient(
                     colors = listOf(
-                        Color.White.copy(alpha = 0.35f),
-                        accentColor.copy(alpha = 0.22f),
-                        Color.Transparent,
-                        accentColor.copy(alpha = 0.40f),
-                        Color.White.copy(alpha = 0.35f)
+                        accentColor.lighten(0.25f), accentColor,
+                        accentColor.darken(0.20f), accentColor,
+                        accentColor.lighten(0.25f)
                     ),
                     center = center
                 )
@@ -126,120 +122,180 @@ fun FinHubLogoPro(
             }
         }
 
-        // 3) رینگ داخلی ظریف برای جدا کردن Z از پس‌زمینه
+        // 3) رینگ داخلیِ جداکننده
         drawCircle(
             color = Color.White.copy(alpha = 0.08f),
             radius = r - ringWidth - innerRingWidth / 2f,
             style = Stroke(width = innerRingWidth)
         )
 
-        // 4) ساخت Z (نوار بالا + مورب ضخیم + نوار پایین)
+        // 4) Z ارتقایافته
         inset(ringWidth + innerRingWidth + max(1f, zStroke)) {
             val w = size.width
             val h = size.height
 
+            // باکس Z با کمی overshoot
             val left = w * 0.20f
             val right = w * 0.80f
-            val top = h * 0.24f
-            val bottom = h * 0.76f
+            val top = h * 0.235f
+            val bottom = h * 0.765f
             val width = right - left
+            val pivot = Offset((left + right) / 2f, (top + bottom) / 2f)
 
-            // نوارهای بالا/پایین با گوشه‌های نرم — اصلاح RoundRect با CornerRadius
-            val rx = zThickness * 0.28f
-            val ry = zThickness * 0.28f
-            val corner = CornerRadius(rx, ry)
-
-            val topBar = Path().apply {
-                addRoundRect(
-                    RoundRect(left, top, right, top + zThickness, corner)
-                )
-            }
-            val bottomBar = Path().apply {
-                addRoundRect(
-                    RoundRect(left, bottom - zThickness, right, bottom, corner)
-                )
-            }
-
-            // مورب ضخیم به صورت چهارضلعی موازی با ضخامت واقعی
-            val p1 = Offset(right - zThickness * 0.15f, top + zThickness) // اتصال تمیزتر
-            val p2 = Offset(left + zThickness * 0.15f, bottom - zThickness)
-            val vx = p2.x - p1.x
-            val vy = p2.y - p1.y
-            val len = sqrt((vx * vx + vy * vy).toDouble()).toFloat().coerceAtLeast(1e-3f)
-            val nx = -vy / len
-            val ny = vx / len
-            val ox = nx * (zThickness / 2f)
-            val oy = ny * (zThickness / 2f)
-
-            val diag = Path().apply {
-                moveTo(p1.x + ox, p1.y + oy)
-                lineTo(p2.x + ox, p2.y + oy)
-                lineTo(p2.x - ox, p2.y - oy)
-                lineTo(p1.x - ox, p1.y - oy)
-                close()
-            }
-
-            // --- سایه‌ی نرم زیر Z (چند پاس با جابه‌جایی) ---
-            val shadowColor = Color.Black.copy(alpha = 0.22f)
-            val shadowPasses = 3
-            repeat(shadowPasses) { i ->
-                val k = (i + 1) / shadowPasses.toFloat()
-                val off = zShadowOffset * k
-                val alpha = 0.22f * (1f - k * 0.6f)
-                val sc = shadowColor.copy(alpha = alpha)
-
-                translate(off, off) {
-                    drawPath(topBar, color = sc)
-                    drawPath(diag, color = sc)
-                    drawPath(bottomBar, color = sc)
+            rotate(zTiltDegrees, pivot) {
+                // نوارهای بالا/پایین با گوشه‌های نرم (CornerRadius + RoundRect)
+                val corner = CornerRadius(zThickness * 0.26f, zThickness * 0.26f)
+                val topBar = Path().apply {
+                    addRoundRect(RoundRect(left, top, right, top + zThickness, corner))
                 }
+                val bottomBar = Path().apply {
+                    addRoundRect(RoundRect(left, bottom - zThickness, right, bottom, corner))
+                }
+
+                // مورب نواری (چهارضلعی موازی) با اتصال تمیز
+                val p1 = Offset(right - zThickness * 0.12f, top + zThickness)
+                val p2 = Offset(left + zThickness * 0.12f, bottom - zThickness)
+                val vx = p2.x - p1.x
+                val vy = p2.y - p1.y
+                val len = sqrt((vx * vx + vy * vy).toDouble()).toFloat().coerceAtLeast(1e-3f)
+                val nx = -vy / len
+                val ny = vx / len
+                val ox = nx * (zThickness / 2f)
+                val oy = ny * (zThickness / 2f)
+                val diag = Path().apply {
+                    moveTo(p1.x + ox, p1.y + oy)
+                    lineTo(p2.x + ox, p2.y + oy)
+                    lineTo(p2.x - ox, p2.y - oy)
+                    lineTo(p1.x - ox, p1.y - oy)
+                    close()
+                }
+
+                // سایه‌ی نرم زیر Z (سه پاس)
+                val shadowColor = Color.Black.copy(alpha = 0.22f)
+                repeat(3) { i ->
+                    val k = (i + 1) / 3f
+                    val off = zShadowOffset * k
+                    val sc = shadowColor.copy(alpha = 0.22f * (1f - k * 0.6f))
+                    translate(off, off) {
+                        drawPath(topBar, color = sc)
+                        drawPath(diag, color = sc)
+                        drawPath(bottomBar, color = sc)
+                    }
+                }
+
+                // پرکننده‌ی Z
+                val zFill = Brush.linearGradient(
+                    colors = listOf(
+                        Color.White.copy(alpha = 0.95f),
+                        autoOn.copy(alpha = 0.96f),
+                        autoOn.copy(alpha = 0.84f)
+                    ),
+                    start = Offset(left, top),
+                    end = Offset(right, bottom)
+                )
+                val zEdge = autoOn.copy(alpha = 0.28f)
+
+                drawPath(topBar, brush = zFill)
+                drawPath(diag, brush = zFill)
+                drawPath(bottomBar, brush = zFill)
+
+                // کانتور با پارامترهای نام‌دار (حل mismatch)
+                drawPath(
+                    topBar,
+                    color = zEdge,
+                    style = Stroke(width = zStroke, cap = StrokeCap.Round, join = StrokeJoin.Round)
+                )
+                drawPath(
+                    diag,
+                    color = zEdge,
+                    style = Stroke(width = zStroke, cap = StrokeCap.Round, join = StrokeJoin.Round)
+                )
+                drawPath(
+                    bottomBar,
+                    color = zEdge,
+                    style = Stroke(width = zStroke, cap = StrokeCap.Round, join = StrokeJoin.Round)
+                )
+
+                // هایلایت مرکزی (شیشه‌ای) روی هر بخش
+                val centerStroke = zThickness * 0.38f
+                val centerAlpha = 0.35f
+
+                val hlTop = Path().apply {
+                    moveTo(left + zThickness * 0.55f, top + zThickness / 2f)
+                    lineTo(right - zThickness * 0.55f, top + zThickness / 2f)
+                }
+                drawPath(
+                    hlTop,
+                    brush = Brush.linearGradient(
+                        listOf(Color.White.copy(alpha = centerAlpha), Color.Transparent),
+                        start = Offset(left, top), end = Offset(right, top)
+                    ),
+                    style = Stroke(width = centerStroke, cap = StrokeCap.Round),
+                    blendMode = BlendMode.Screen
+                )
+
+                val hlDiag = Path().apply { moveTo(p1.x, p1.y); lineTo(p2.x, p2.y) }
+                drawPath(
+                    hlDiag,
+                    brush = Brush.linearGradient(
+                        listOf(Color.White.copy(alpha = centerAlpha), Color.Transparent),
+                        start = p1, end = p2
+                    ),
+                    style = Stroke(width = centerStroke, cap = StrokeCap.Round),
+                    blendMode = BlendMode.Screen
+                )
+
+                val hlBottom = Path().apply {
+                    moveTo(left + zThickness * 0.55f, bottom - zThickness / 2f)
+                    lineTo(right - zThickness * 0.55f, bottom - zThickness / 2f)
+                }
+                drawPath(
+                    hlBottom,
+                    brush = Brush.linearGradient(
+                        listOf(Color.White.copy(alpha = centerAlpha), Color.Transparent),
+                        start = Offset(left, bottom), end = Offset(right, bottom)
+                    ),
+                    style = Stroke(width = centerStroke, cap = StrokeCap.Round),
+                    blendMode = BlendMode.Screen
+                )
+
+                // افکت Fold ظریف در اتصال‌ها
+                val foldSize = zThickness * 0.65f
+                val topFold = Path().apply {
+                    moveTo(p1.x, p1.y)
+                    lineTo(p1.x - foldSize, p1.y)
+                    lineTo(p1.x, p1.y + foldSize)
+                    close()
+                }
+                drawPath(
+                    topFold,
+                    brush = Brush.linearGradient(
+                        listOf(Color.Black.copy(alpha = 0.22f), Color.Transparent),
+                        start = Offset(p1.x - foldSize, p1.y),
+                        end = Offset(p1.x, p1.y + foldSize)
+                    ),
+                    blendMode = BlendMode.Multiply
+                )
+
+                val bottomFold = Path().apply {
+                    moveTo(p2.x, p2.y)
+                    lineTo(p2.x + foldSize, p2.y)
+                    lineTo(p2.x, p2.y - foldSize)
+                    close()
+                }
+                drawPath(
+                    bottomFold,
+                    brush = Brush.linearGradient(
+                        listOf(Color.White.copy(alpha = 0.28f), Color.Transparent),
+                        start = Offset(p2.x + foldSize, p2.y),
+                        end = Offset(p2.x, p2.y - foldSize)
+                    ),
+                    blendMode = BlendMode.Screen
+                )
             }
-
-            // پرکننده‌ی Z با گرادیان
-            val zFill = Brush.linearGradient(
-                colors = listOf(
-                    Color.White.copy(alpha = 0.95f),
-                    autoOn.copy(alpha = 0.96f),
-                    autoOn.copy(alpha = 0.82f),
-                ),
-                start = Offset(left, top),
-                end = Offset(right, bottom)
-            )
-
-            // کانتور Z
-            val zEdge = autoOn.copy(alpha = 0.28f)
-
-            // رسم: ابتدا پر، سپس کانتور
-            drawPath(topBar, brush = zFill)
-            drawPath(diag, brush = zFill)
-            drawPath(bottomBar, brush = zFill)
-
-            drawPath(
-                topBar,
-                color = zEdge,
-                style = Stroke(width = zStroke, join = StrokeJoin.Round, cap = StrokeCap.Round)
-            )
-            drawPath(
-                diag,
-                color = zEdge,
-                style = Stroke(width = zStroke, join = StrokeJoin.Round, cap = StrokeCap.Round)
-            )
-            drawPath(
-                bottomBar,
-                color = zEdge,
-                style = Stroke(width = zStroke, join = StrokeJoin.Round, cap = StrokeCap.Round)
-            )
-
-            // هایلایت شیشه‌ای روی Z (BlendMode.Screen)
-            val zHighlight = Brush.linearGradient(
-                colors = listOf(Color.White.copy(alpha = 0.40f), Color.Transparent),
-                start = Offset(left, top),
-                end = Offset(right, top + width * 0.35f)
-            )
-            drawPath(topBar, brush = zHighlight, blendMode = BlendMode.Screen)
         }
 
-        // 5) گلاس‌لاین روی اُرب: قوس براق (Screen)
+        // 5) گلاس‌لاین روی اُرب
         inset(ringWidth) {
             val gloss = Brush.linearGradient(
                 colors = listOf(Color.White.copy(alpha = 0.25f), Color.Transparent),
@@ -248,9 +304,7 @@ fun FinHubLogoPro(
             )
             drawArc(
                 brush = gloss,
-                startAngle = -200f,
-                sweepAngle = 80f,
-                useCenter = false,
+                startAngle = -200f, sweepAngle = 80f, useCenter = false,
                 style = Stroke(width = r * 0.20f, cap = StrokeCap.Round),
                 blendMode = BlendMode.Screen
             )
@@ -260,7 +314,6 @@ fun FinHubLogoPro(
 
 /* ==================== Utilities ==================== */
 
-/** در صورت کمبود کنتراست، بهترین onColor (کاندید/سفید/مشکی) را برمی‌گرداند. */
 private fun bestReadableOn(base: Color, candidate: Color): Color {
     fun contrastRatio(fg: Color, bg: Color): Double {
         val l1 = fg.luminance().toDouble()
@@ -277,7 +330,18 @@ private fun bestReadableOn(base: Color, candidate: Color): Color {
     }
 }
 
-/** ترنسلیت ساده داخل DrawScope (برای سایه‌ی چندپاسی). */
+private fun Color.lighten(factor: Float) = copy(
+    red = (red + (1 - red) * factor).coerceIn(0f, 1f),
+    green = (green + (1 - green) * factor).coerceIn(0f, 1f),
+    blue = (blue + (1 - blue) * factor).coerceIn(0f, 1f)
+)
+
+private fun Color.darken(factor: Float) = copy(
+    red = (red * (1 - factor)).coerceIn(0f, 1f),
+    green = (green * (1 - factor)).coerceIn(0f, 1f),
+    blue = (blue * (1 - factor)).coerceIn(0f, 1f)
+)
+
 private inline fun androidx.compose.ui.graphics.drawscope.DrawScope.translate(
     dx: Float,
     dy: Float,
