@@ -123,20 +123,11 @@ fun InquiryScreen(
                 }
 
                 state.result?.let { json ->
-                    val pretty = remember(json) {
-                        Json { prettyPrint = true }.encodeToString(JsonObject.serializer(), json)
-                    }
                     Card(modifier = Modifier.fillMaxWidth()) {
-                        SelectionContainer {
-                            Text(
-                                pretty,
-                                modifier = Modifier
-                                    .padding(16.dp)
-                                    .horizontalScroll(rememberScrollState()),
-                                style = MaterialTheme.typography.bodySmall,
-                                fontFamily = FontFamily.Monospace
-                            )
-                        }
+                        JsonViewer(
+                            element = json,
+                            modifier = Modifier.padding(16.dp)
+                        )
                     }
                 }
                 state.error?.let { err ->
