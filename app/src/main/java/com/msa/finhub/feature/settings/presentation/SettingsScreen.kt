@@ -149,17 +149,14 @@ fun SettingsScreen(
                     ) {Text(stringResource(R.string.settings_logout)) }
 
                     Text(
-                        stringResource(R.string.settings_footer, java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)),
+                        stringResource(R.string.settings_footer, currentYear),
                         style = ty.labelSmall, color = cs.onSurfaceVariant
                     )
                 }
             }
 
             Spacer(Modifier.height(24.dp))
-            Text(
-                stringResource(R.string.settings_footer, currentYear),
-                style = ty.labelSmall, color = cs.onSurfaceVariant
-            )
+
         }
 
         // دیالوگ‌ها
