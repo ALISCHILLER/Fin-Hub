@@ -1,6 +1,5 @@
-package com.msa.finhub.feature.home
+package com.msa.finhub.feature.home.presentation
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues

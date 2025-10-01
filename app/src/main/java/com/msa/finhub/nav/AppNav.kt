@@ -55,7 +55,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.msa.finhub.feature.auth.login.presentation.LoginRoute
-import com.msa.finhub.feature.home.HomeScreen
+import com.msa.finhub.feature.home.presentation.HomeScreen
 import com.msa.finhub.feature.settings.presentation.SettingsRoute
 import com.msa.finhub.feature.inquiry.presentation.InquiryScreen
 import com.msa.finhub.feature.inquiry.presentation.InquirySpecs
