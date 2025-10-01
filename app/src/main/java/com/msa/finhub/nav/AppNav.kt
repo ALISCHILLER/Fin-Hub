@@ -59,7 +59,7 @@ import com.msa.finhub.feature.home.presentation.HomeScreen
 import com.msa.finhub.feature.settings.presentation.SettingsRoute
 import com.msa.finhub.feature.inquiry.presentation.InquiryScreen
 import com.msa.finhub.feature.inquiry.presentation.InquirySpecs
-
+import com.msa.finhub.feature.home.presentation.HomeRoute
 @Composable
 fun AppNav() {
     val navController = rememberNavController()
@@ -110,7 +110,7 @@ fun AppNav() {
                     }
                 )
             }
-            composable(Routes.Home)     { HomeScreen(navController) }
+            composable(Routes.Home)     { HomeRoute(navController) }
 
             composable(Routes.Settings) {
                 SettingsRoute(

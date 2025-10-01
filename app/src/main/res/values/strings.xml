@@ -17,7 +17,7 @@
     <string name="error_unprocessable">امکان پردازش داده‌ها نیست</string>
     <string name="error_validation_failed">اعتبارسنجی شکست خورد</string>
     <string name="error_request_cancelled">درخواست کنسل شد</string>
-
+    <string name="home_no_permissions">دسترسی فعالی برای استعلام‌ها یافت نشد.</string>
     <!-- Server errors -->
     <string name="error_server">خطای داخلی سرور</string>
     <string name="error_server_generic">خطای عمومی سمت سرور</string>
