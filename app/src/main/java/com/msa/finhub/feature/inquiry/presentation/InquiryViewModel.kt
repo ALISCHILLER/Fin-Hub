@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonElement
 import timber.log.Timber
 class InquiryViewModel(
     private val inquiry: InquiryUseCase
@@ -15,7 +15,7 @@ class InquiryViewModel(
 
     data class UiState(
         val loading: Boolean = false,
-        val result: JsonObject? = null,
+        val result: JsonElement? = null,
         val error: String? = null
     )
 
@@ -30,8 +30,8 @@ class InquiryViewModel(
         _state.update { it.copy(loading = true, error = null, result = null) }
         viewModelScope.launch {
             inquiry(spec.path, params).fold(
-                onSuccess = { data ->
-                    _state.update { it.copy(loading = false, result = data) }
+                onSuccess = { element ->
+                    _state.update { it.copy(loading = false, result = element) }
                 },
                 onFailure = { ex ->
                     _state.update { it.copy(loading = false, error = ex.message) }
