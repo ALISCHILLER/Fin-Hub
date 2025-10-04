@@ -51,7 +51,8 @@
     <string name="home_guaranty_inquiry">استعلام ضمانت‌های فرد</string>
     <string name="home_sayad_accept_cheque_receiver">تأیید چک توسط گیرنده</string>
     <string name="inquiry_submit">ارسال استعلام</string>
-
+    <string name="inquiry_result_title">نتیجه استعلام</string>
+    <string name="inquiry_error_title">خطا در استعلام</string>
     <!-- Settings screen -->
     <string name="settings_title">تنظیمات</string>
     <string name="settings_account_header">حساب کاربری</string>

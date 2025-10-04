@@ -1,9 +1,19 @@
 package com.msa.finhub.feature.inquiry.presentation
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.AssistChipDefaults
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -180,39 +190,58 @@ private fun JsonViewerInternal(
     element: JsonElement,
     modifier: Modifier,
     indent: Int,
-    parentKey: String?
+    parentKey: String?,
 ) {
     when (element) {
         is JsonObject -> {
-            Column(modifier = modifier.padding(start = indent.dp)) {
+            Column(
+                modifier = modifier.padding(start = indent.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
                 element.forEach { (key, value) ->
                     JsonItem(
                         key = key,
                         label = FIELD_LABELS[key] ?: key,
                         value = value,
-                        indent = indent + 8
+                        indent = indent
                     )
                 }
             }
         }
         is JsonArray -> {
-            Column(modifier = modifier.padding(start = indent.dp)) {
-                element.forEach { item ->
-                    JsonViewerInternal(
-                        element = item,
-                        modifier = Modifier,
-                        indent = indent + 8,
-                        parentKey = parentKey
-                    )
+            Column(
+                modifier = modifier.padding(start = indent.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                element.forEachIndexed { index, item ->
+                    ArrayItemCard(index) {
+                        JsonViewerInternal(
+                            element = item,
+                            modifier = Modifier.fillMaxWidth(),
+                            indent = 0,
+                            parentKey = parentKey
+                        )
+                    }
                 }
             }
         }
         is JsonPrimitive -> {
-            Text(
-                text = formatPrimitive(parentKey, element),
-                modifier = modifier.padding(start = indent.dp, top = 4.dp),
-                style = MaterialTheme.typography.bodySmall
-            )
+            val label = parentKey?.let { FIELD_LABELS[it] ?: it }
+            val formattedValue = formatPrimitive(parentKey, element)
+            if (label != null) {
+                PrimitiveItem(
+                    label = label,
+                    formattedValue = formattedValue,
+                    indent = indent
+                )
+            } else {
+                Text(
+                    text = formattedValue.primary,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = modifier.padding(start = indent.dp)
+                )
+            }
         }
     }
 }
@@ -221,38 +250,179 @@ private fun JsonViewerInternal(
 private fun JsonItem(key: String, label: String, value: JsonElement, indent: Int) {
     when (value) {
         is JsonPrimitive -> {
-            Row(modifier = Modifier.padding(start = indent.dp, top = 4.dp)) {
-                Text(
-                    text = "$label: ",
-                    style = MaterialTheme.typography.bodySmall,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = formatPrimitive(key, value),
-                    style = MaterialTheme.typography.bodySmall
-                )
-            }
+            PrimitiveItem(
+                label = label,
+                formattedValue = formatPrimitive(key, value),
+                indent = indent
+            )
         }
-        is JsonObject, is JsonArray -> {
-            Column(modifier = Modifier.padding(start = indent.dp, top = 4.dp)) {
-                Text(
-                    text = label,
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.Bold
-                )
+        is JsonObject -> {
+            SectionContainer(
+                label = label,
+                indent = indent
+            ) {
                 JsonViewerInternal(
                     element = value,
-                    modifier = Modifier,
-                    indent = indent + 8,
+                    modifier = Modifier.fillMaxWidth(),
+                    indent = 0,
                     parentKey = key
                 )
             }
         }
+        is JsonArray -> {
+            SectionContainer(
+                label = label,
+                indent = indent
+            ) {
+                if (value.isEmpty()) {
+                    Text(
+                        text = "اطلاعاتی ثبت نشده است",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                } else {
+                    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                        value.forEachIndexed { index, item ->
+                            ArrayItemCard(index) {
+                                JsonViewerInternal(
+                                    element = item,
+                                    modifier = Modifier.fillMaxWidth(),
+                                    indent = 0,
+                                    parentKey = key
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
     }
 }
 
-private fun formatPrimitive(key: String?, value: JsonPrimitive): String {
+@Composable
+private fun PrimitiveItem(label: String, formattedValue: FormattedValue, indent: Int) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = indent.dp),
+        verticalArrangement = Arrangement.spacedBy(6.dp)
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.primary,
+            fontWeight = FontWeight.SemiBold
+        )
+        Surface(
+            color = MaterialTheme.colorScheme.surfaceContainerHighest,
+            shape = RoundedCornerShape(14.dp),
+            tonalElevation = 2.dp,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Column(
+                modifier = Modifier.padding(horizontal = 14.dp, vertical = 12.dp),
+                verticalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                Text(
+                    text = formattedValue.primary,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                formattedValue.secondary?.let { secondary ->
+                    AssistChip(
+                        onClick = {},
+                        enabled = false,
+                        label = {
+                            Text(
+                                text = secondary,
+                                style = MaterialTheme.typography.labelMedium
+                            )
+                        },
+                        colors = AssistChipDefaults.assistChipColors(
+                            disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                            disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    )
+                }
+            }
+        }
+    }
+    Spacer(modifier = Modifier.height(4.dp))
+}
+
+@Composable
+private fun SectionContainer(
+    label: String,
+    indent: Int,
+    content: @Composable ColumnScope.() -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = indent.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.titleSmall,
+            fontWeight = FontWeight.SemiBold,
+            color = MaterialTheme.colorScheme.primary
+        )
+        ElevatedCard(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(18.dp),
+            colors = CardDefaults.elevatedCardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+            )
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                content = content
+            )
+        }
+    }
+}
+
+@Composable
+private fun ArrayItemCard(index: Int, content: @Composable ColumnScope.() -> Unit) {
+    Surface(
+        shape = RoundedCornerShape(16.dp),
+        color = MaterialTheme.colorScheme.surfaceContainerHigh,
+        tonalElevation = 1.dp,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            AssistChip(
+                onClick = {},
+                enabled = false,
+                label = {
+                    Text(
+                        text = "آیتم ${index + 1}",
+                        style = MaterialTheme.typography.labelMedium
+                    )
+                },
+                colors = AssistChipDefaults.assistChipColors(
+                    disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            )
+            content()
+        }
+    }
+}
+
+private data class FormattedValue(
+    val primary: String,
+    val secondary: String? = null
+)
+
+private fun formatPrimitive(key: String?, value: JsonPrimitive): FormattedValue {
     val content = value.content
     val mapped = key?.let { VALUE_LABELS[it]?.get(content) }
-    return mapped?.let { "$it (${content})" } ?: content
+    return mapped?.let { FormattedValue(primary = it, secondary = content) } ?: FormattedValue(primary = content)
 }
