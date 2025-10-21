@@ -53,6 +53,90 @@
     <string name="inquiry_submit">ارسال استعلام</string>
     <string name="inquiry_result_title">نتیجه استعلام</string>
     <string name="inquiry_error_title">خطا در استعلام</string>
+    <string name="inquiry_help_content_description">راهنمای استعلام</string>
+    <string name="inquiry_help_acknowledge">متوجه شدم</string>
+
+    <!-- Inquiry field labels & hints -->
+    <string name="inquiry_field_retry">استعلام مجدد؟</string>
+    <string name="inquiry_field_sayad_id">شناسه چک صیادی</string>
+    <string name="inquiry_field_customer_national_code">کد ملی مشتری</string>
+    <string name="inquiry_field_customer_code">کد مشتری</string>
+    <string name="inquiry_field_is_owner_by_customer">چک برای خود مشتری؟</string>
+    <string name="inquiry_field_economic_code">کد اقتصادی ۱۱ رقمی</string>
+    <string name="inquiry_field_person_national_code">کد ملی فرد</string>
+    <string name="inquiry_field_birth_date">تاریخ تولد</string>
+    <string name="inquiry_hint_birth_date">مثال: 1377/05/29</string>
+    <string name="inquiry_field_iban">شماره شبا</string>
+    <string name="inquiry_hint_iban">IR...</string>
+    <string name="inquiry_field_cheque_id">شناسه چک</string>
+    <string name="inquiry_field_mobile">شماره موبایل</string>
+    <string name="inquiry_hint_mobile">09...</string>
+    <string name="inquiry_field_national_code">کد ملی</string>
+
+    <!-- Inquiry help content -->
+    <string name="inquiry_help_sayad_cheque_title">راهنمای استعلام چک صیاد</string>
+    <string name="inquiry_help_sayad_cheque_body">ورودی اجباری:
+• کد صیاد چک (شناسه ۱۶ رقمی)
+
+ورودی اختیاری:
+• کد ملی مشتری
+• کد مشتری
+• وضعیت مالکیت چک توسط مشتری
+• گزینه استعلام مجدد
+
+این سرویس بررسی می‌کند که چک صیادی در کارتابل زرنگار ثبت شده است یا خیر. فیلدهای اختیاری کمک می‌کنند مشخص شود استعلام برای کدام مشتری و چک انجام شده است.</string>
+    <string name="inquiry_help_color_status_person_title">راهنمای استعلام وضعیت چک (حقیقی)</string>
+    <string name="inquiry_help_color_status_person_body">ورودی اجباری:
+• کد ملی مشتری حقیقی
+
+ورودی اختیاری:
+• شناسه صیادی چک
+• کد مشتری
+• وضعیت مالکیت چک توسط مشتری
+• گزینه استعلام مجدد
+
+نتیجه استعلام نشان می‌دهد مشتری چک برگشتی دارد یا خیر. مقدار ۱ یعنی هیچ چک برگشتی ثبت نشده و وضعیت سفید است.</string>
+    <string name="inquiry_help_color_status_legal_title">راهنمای استعلام وضعیت چک (حقوقی)</string>
+    <string name="inquiry_help_color_status_legal_body">ورودی اجباری:
+• کد اقتصادی ۱۱ رقمی شخص حقوقی
+
+ورودی اختیاری:
+• شناسه صیادی چک
+• کد مشتری
+• وضعیت مالکیت چک توسط مشتری
+• گزینه استعلام مجدد
+
+نتیجه استعلام وضعیت چک‌های مشتری حقوقی را نمایش می‌دهد و نشان می‌دهد آیا سابقه چک برگشتی وجود دارد یا خیر. مقدار ۱ به معنی نبود چک برگشتی و وضعیت سفید است.</string>
+    <string name="inquiry_help_personal_identity_title">راهنمای احراز هویت حقیقی</string>
+    <string name="inquiry_help_personal_identity_body">ورودی اجباری:
+• کد ملی مشتری
+• تاریخ تولد به فرمت شمسی
+
+هدف استعلام، صحت کد ملی و تاریخ تولد هنگام ثبت مشتری جدید است تا مطمئن شوید اطلاعات هویتی وجود دارد و معتبر است. در صورت نیاز می‌توانید گزینه استعلام مجدد را فعال کنید.</string>
+    <string name="inquiry_help_national_code_iban_title">راهنمای تطابق کدملی و شماره شِبا/چک</string>
+    <string name="inquiry_help_national_code_iban_body">ورودی اجباری:
+• شماره شبا
+• کد ملی مشتری (یا دارنده نهایی چک)
+
+ورودی اختیاری برای تعیین چک و مشتری دقیق:
+• کد مشتری
+• شناسه صیادی چک
+• وضعیت مالکیت چک توسط مشتری
+• گزینه استعلام مجدد
+
+این استعلام بررسی می‌کند چک یا حساب ارائه‌شده متعلق به همان مشتری باشد. اگر مشخص شد چک برای شخص ثالث است، کد ملی آن فرد را در فیلد مربوطه وارد کنید تا مالک واقعی مشخص شود.</string>
+    <string name="inquiry_help_mobile_title">راهنمای تطابق کدملی و موبایل</string>
+    <string name="inquiry_help_mobile_body">ورودی اجباری:
+• کد ملی مشتری
+• شماره تلفن همراه
+
+هدف این استعلام اطمینان از تطابق سیم‌کارت با مالک کد ملی است تا هنگام ثبت مشتری جدید خط تلفن متعلق به همان شخص باشد. می‌توانید در صورت نیاز گزینه استعلام مجدد را فعال کنید.</string>
+    <string name="inquiry_help_guaranty_title">راهنمای استعلام ضمانت‌های فرد</string>
+    <string name="inquiry_help_guaranty_body">ورودی اجباری:
+• کد ملی فرد
+
+با وارد کردن کد ملی، تمامی ضمانت‌هایی که فرد برای اشخاص یا مشتریان مختلف انجام داده است گزارش می‌شود. در صورت نیاز به بروزرسانی می‌توانید گزینه استعلام مجدد را فعال کنید.</string>
+
     <!-- Settings screen -->
     <string name="settings_title">تنظیمات</string>
     <string name="settings_account_header">حساب کاربری</string>

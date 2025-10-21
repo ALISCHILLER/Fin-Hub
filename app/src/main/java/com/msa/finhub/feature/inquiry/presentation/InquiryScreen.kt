@@ -8,6 +8,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
@@ -54,6 +55,7 @@ fun InquiryScreen(
     val boolValues = rememberSaveable(spec, saver = stateMapSaver<Boolean>()) {
         mutableStateMapOf<String, Boolean>()
     }
+    var isHelpVisible by rememberSaveable(spec) { mutableStateOf(false) }
     LaunchedEffect(spec) {
         Timber.d("InquiryScreen launched for spec: ${'$'}{spec.path}")
         textValues.clear(); boolValues.clear()
@@ -63,6 +65,7 @@ fun InquiryScreen(
                 FieldType.Bool -> boolValues[field.key] = field.defaultBool
             }
         }
+        isHelpVisible = false
     }
 
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -71,10 +74,20 @@ fun InquiryScreen(
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text(spec.title) },
+                    title = { Text(stringResource(spec.titleRes)) },
                     navigationIcon = {
                         IconButton(onClick = onBack) {
                             Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+                        }
+                    },
+                    actions = {
+                        spec.help?.let {
+                            IconButton(onClick = { isHelpVisible = true }) {
+                                Icon(
+                                    imageVector = Icons.Default.Info,
+                                    contentDescription = stringResource(R.string.inquiry_help_content_description)
+                                )
+                            }
                         }
                     }
                 )
@@ -93,8 +106,10 @@ fun InquiryScreen(
                             OutlinedTextField(
                                 value = textValues[field.key] ?: "",
                                 onValueChange = { textValues[field.key] = it },
-                                label = { Text(field.label) },
-                                placeholder = field.hint?.let { { Text(it) } },
+                                label = { Text(stringResource(field.labelRes)) },
+                                placeholder = field.hintRes?.let { hintRes ->
+                                    { Text(stringResource(hintRes)) }
+                                },
                                 modifier = Modifier.fillMaxWidth()
                             )
                         }
@@ -105,7 +120,7 @@ fun InquiryScreen(
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Text(field.label)
+                                Text(stringResource(field.labelRes))
                                 Switch(
                                     checked = boolValues[field.key] ?: false,
                                     onCheckedChange = { boolValues[field.key] = it }
@@ -199,6 +214,31 @@ fun InquiryScreen(
         }
 
         LoadingOverlay(show = state.loading)
+        if (isHelpVisible) {
+            spec.help?.let { help ->
+                AlertDialog(
+                    onDismissRequest = { isHelpVisible = false },
+                    confirmButton = {
+                        TextButton(onClick = { isHelpVisible = false }) {
+                            Text(stringResource(R.string.inquiry_help_acknowledge))
+                        }
+                    },
+                    title = {
+                        Text(
+                            text = stringResource(help.headlineRes),
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    },
+                    text = {
+                        Text(
+                            text = stringResource(help.descriptionRes),
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
+                )
+            }
+        }
     }
 
 }

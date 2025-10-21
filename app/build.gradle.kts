@@ -88,7 +88,7 @@ dependencies {
     // Ktor Core + Plugins
     implementation(platform(dependency.ktor.bom))
     implementation(dependency.ktor.core)
-    implementation(dependency.ktor.okhttp)         // 👈 فقط همین engine
+    implementation(dependency.ktor.okhttp)
     implementation(dependency.ktor.auth)
     implementation(dependency.ktor.logging)
     implementation(dependency.ktor.negotiation)
